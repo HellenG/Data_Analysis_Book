@@ -1,0 +1,40 @@
+--- 
+title: "Fundamentals of Data Analysis and Graphics using R"
+author: "Hellen Gakuruh"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+biblio-style: apalike
+link-citations: yes
+github-repo: HellenG/Data_Analysis_Book
+description: "'Fundamentals of Data Analysis and Graphics using R' is the third and final book in a three part tutorial series."
+---
+
+
+# Preface {-}
+
+```{r, echo=FALSE, out.width='37.5%', out.height='60%'}
+knitr::include_graphics("figures/cover3.png", dpi = NA)
+```
+
+Welcome to "Fundamentals of Data Analysis using R", this is the third and core book in our learning data analysis and graphics tutorial series. 
+
+In this book we aim to get a good foundation on data analysis; that is, the fundamental concepts and methods in Statistics. In all our chapters, we will strive to understand the reasoning behind the calculations including assumptions made rather than memorizing formulars. In so doing we get the ability to make sound interpretation of results. 
+
+In this book, we will begin by learning how to describe data before learning how to make inferences. 
+
+### Learning Outcomes {-}
+
+* Chapter One:    Introduction
+* Chapter Two:    Descriptive Statistics
+* Chapter Three:  Exploratory Data Analysis (EDA) 
+* Chapter Four:   Probability
+* Chapter Five:   Inferential Statistics
+* Chapter Six:    Time Series Analysis
+* Chapter Seven:  Survival Analysis
+
+* Appendix A : Refresher Mathematics
+
+### It's a free E-book {-}
+
+This book is completely free, but feel free to make any donation towards future book development.

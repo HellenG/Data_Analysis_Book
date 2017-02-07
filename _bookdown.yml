@@ -1,0 +1,9 @@
+book_filename: "data_analysis.Rmd"
+language:
+  ui:
+    chapter_name: "Chapter "
+rmd_files: ["index.Rmd", 
+            "01-intro.Rmd",
+            "appdx0.Rmd"]
+before_chapter_script: ["before.R"]
+output_dir: "Data_Analysis"
