@@ -1533,8 +1533,10 @@ title("Bar plot of ages data set", xlab = "ages", ylab = "Frequency")
 There is a lot of debate on use of bar plot, in general, these plots are seen as easy to generate but have a high data to ink ratio, they basically use to much ink. Hence an alternative is "Cleveland's dot plot".
 
 ```{r "dotplot-02", fig.cap="Cleverland's dot plot"}
-dotchart(tabages, bg = 4)
-title("Dot plot a bar plot alternative", xlab = "Frequencies", ylab = "Scores")
+tabages_mat <- matrix(tabages)
+colnames(tabages_mat) <- "Ages" 
+dotchart(tabages_mat, bg = 4)
+title("Dot plot a bar plot alternative", xlab = "Frequencies")
 ```
 
 
