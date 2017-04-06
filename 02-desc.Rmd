@@ -42,7 +42,7 @@ Consider a numerical variable like scores of students in a class room, for this 
 
 In this chapter, we will go over concepts in descriptive statistics (theoretically) and then follow up with a practical session. Our practical session will involve an actual data analysis of some data set followed up by a demonstration of how to write an analytical report.
 
-With that in mind, for our concept building section, we shall discuss two quantiles (percentiles and quartiles ), three measures of central tendency or location (mean, median, and mode), four measures of spread or dispersion (range, inter-quartile range(IQR), variance, and standard deviation) and finally two measure of the shape of the data distribution (skewness, kurtosis).
+With that in mind, for our concept building section, we shall discuss two quantiles (percentiles and quartiles ), three measures of central tendency or location (mean, median, and mode), four measures of spread or dispersion (range, inter-quartile range(IQR), variance, and standard deviation) and finally two measures of shape of a data distribution (skewness, kurtosis).
 
 
 ## Measures of Descriptive Statistics
@@ -1651,9 +1651,9 @@ Ultimately as we compute Kurtosis, we should be able to say whether it is "Mesok
 
 Mesokurtic distributions are "bell-shaped" or symmetrical like the normal distribution. This distribution has kurtosis of 3.
 
-A leptokurtic distribution has a kurtosis of greater than 3. The word "Lepto" means "slender", shape-wise it has fatter tails. Example of distributions that display this distribution are: Student's t-distribution, Laplace distribution, Exponent distribution, Poisson distribution and Logistics distribution. During our chapter on probability, we shall discuss more on these and other distributions.
+A leptokurtic distribution has a kurtosis of greater than 3. The word "Lepto" means "slender", shape-wise it has fatter tails. Example of distributions which display this distribution are: Student's t-distribution, Laplace distribution, Exponent distribution, Poisson distribution and Logistics distribution. During our chapter on probability, we shall discuss more on these and other distributions.
 
-Platykurtic comes from the word "platy" and "kurtic". Word platy means "broad" while "kurtic" means kurtosis. This distributions have a kurtosis of less than three. Shape-wise, they have thinner tails. They include: continuous and discrete uniform distributions, and Bernoulli distributions.
+Platykurtic comes from the word "platy" and "kurtic". Word platy means "broad" while "kurtic" means kurtosis. This distributions has a kurtosis of less than three. Shape-wise, they have thinner tails. They include: continuous and discrete uniform distributions, and Bernoulli distributions.
 
 Kurtosis are often computed in reference to symmetric (ideal) distribution. As mentioned, these distributions have kurtosis of 3, hence kurtosis is often reported in reference to value 3: This is what is called "excess kurtosis". In terms of excess kurtosis, a mesokurtic distribution will be three, a leptokurtic distribution would have more than three (hence positive excess kurtosis) and a platykurtic distribution would have less than three (negative excess kurtosis).  
 
