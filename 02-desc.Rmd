@@ -5,7 +5,7 @@ output:
 ---
 
 
-# Introduction to Descriptive Statistics{#chap1}
+# Introduction to Descriptive Statistics{#chap2}
 
 ```{r globalOptions, echo=FALSE}
 library(knitr)
