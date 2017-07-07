@@ -5,6 +5,7 @@ language:
 rmd_files: ["index.Rmd", 
             "01-intro.Rmd",
             "02-desc.Rmd",
-            "appdx0.Rmd"]
+            "appdx0.Rmd",
+            "appdx1.Rmd"]
 before_chapter_script: ["before.R"]
 output_dir: "Data_Analysis"
