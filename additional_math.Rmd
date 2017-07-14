@@ -5,6 +5,15 @@ date: "July 11, 2017"
 output: html_document
 ---
 
+
+
+```{r, echo=FALSE}
+# Circle equation
+   circ1 <- function(x, r = 1, h = 0, v = 0) sqrt(r^2 - (x-h)^2) + v
+   circ2 <- function(x, r = 1, h = 0, v = 0) sqrt(r^2 - (x-h)^2) - v
+```
+
+
 ```{r, echo=FALSE}
 circle <- function(n = 1, r = 1, h = 0, v = 0, half = FALSE, up = TRUE, plot = TRUE, xlab = "x", ylab = "y", circ.border = "chocolate", lwd = 1, lty = 1, ...) {
    
@@ -19,19 +28,15 @@ circle <- function(n = 1, r = 1, h = 0, v = 0, half = FALSE, up = TRUE, plot = T
       }
    
    
-   # Circle equation
-   circ <- function(x, r, h, v) sqrt(r^2 - (x-h)^2) + v
-   circ2 <- function(x, r, h, v) sqrt(r^2 - (x-h)^2) - v
-   
    # Full or half circle
    if(half) {
       if(up) {
-         y <- circ(x)
+         y <- circ1(x)
       } else {
          y <- -circ2(x)
       }
    } else {
-      y <- lapply(1:n, function(i) c(circ(x[[i]], r[i], h[i], v[i]), -circ2(rev(x[[i]]), r[i], h[i], v[i])))
+      y <- lapply(1:n, function(i) c(circ1(x[[i]], r[i], h[i], v[i]), -circ2(rev(x[[i]]), r[i], h[i], v[i])))
       x <- lapply(x, function(i) c(i, rev(i)))
    }
    
@@ -53,12 +58,12 @@ circle <- function(n = 1, r = 1, h = 0, v = 0, half = FALSE, up = TRUE, plot = T
 
 After concluding re-introduction to Mathematics, it seemed relevant to apply some of those concepts as well as add (just) a few more mathematical concepts. In that regard in this document we will cover these issues in a dynamic way. Dynamic in that concepts will be added as need be.
 
-Initial topic we will cover is "colouring" circles. Here we want to re-introduce circles as regards formulation of their equation and applying definite intergration to color different sections. 
+Initial topic we will cover is "coloring" circles. Here we want to re-introduce circles as regards formulation of their equation and applying definite integration to color different sections. 
 
 
 ## Formulating circle equation
 
-Circles are graphs whose points have an equal distance from a central point. Distance between center and any point on a cicle is referred to as **radius**.
+Circles are graphs whose points have an equal distance from a central point. Distance between center and any point on a circle is referred to as **radius**.
 
 ```{r}
 circle(xlim = c(-2, 2), ylim = c(-1.2, 1.2), circ.border = 4, ann = FALSE, xaxt = "n", yaxt = "n")
@@ -85,7 +90,7 @@ text(0.5, 0.1, "r = 1")
 title("Circle")
 ```
 
-We want to figure out x and y coordinates of points on this graph begining with point (x, y) as shown below. 
+We want to figure out x and y coordinates of points on this graph beginning with point (x, y) as shown below. 
  
 To do this we make a triangle and specifically a right angled triangle (90 degrees), for us to use concept of **Pythagora's theorem**.
 
@@ -138,10 +143,10 @@ This therefore means we can compute one of these variables given other two varia
 
 $$y = \pm \sqrt{r^2 - (x - h)^2} + v$$
 
-Let us use this equation to plot venn diagrams showing relationships of sets.
+Let us use this equation to plot Venn diagrams showing relationships of sets.
 
 
-We begin with unions which require colouring of both circles.
+We begin with unions which require coloring of both circles.
 
 
 ```{r "union-plot"}
@@ -175,7 +180,7 @@ text(c(0.4, 0.4, 0.75, 1.1, 1.1), c(0.2, -0.2, 0, -0.2, 0.2), labels = letters[1
 title("Union")
 ```
 
-A circle has four different intervals, to shade it requires using rectangles with height set to specific interval. For example left quandrant will have it's rectangles with height of it's left point. These rectangles are made to very small values so that they leave no space. 
+A circle has four different intervals, to shade it requires using rectangles with height set to specific interval. For example left quadrant will have it's rectangles with height of it's left point. These rectangles are made to very small values so that they leave no space. 
 
 
 # Intersect
@@ -213,7 +218,7 @@ title("Intersect")
 
 # Disjoint
 
-Disjoint are basically two circles that do not touch each other, therefore a no brainer to plot. 
+Disjoint are basically two circles that do not touch each other, therefore a no brainier to plot. 
 
 
 ```{r}
@@ -227,9 +232,9 @@ title("Disjoint")
 
 # Complement
 
-Complement of a set are all elements in another but not that set. Like complement of A here are all elements in universal set that are not in A. We show this with a transparent circle for A and coloured background to indicate universal set. 
+Complement of a set are all elements in another but not that set. Like complement of A here are all elements in universal set that are not in A. We show this with a transparent circle for A and colored background to indicate universal set. 
 
-Initially began with backgound colour by using one rectangle then coloured circle.  
+Initially began with background color by using one rectangle then colored circle.  
 
 ```{r}
 circle(n = 1, r = 0.5, circ.border = 4, lwd = 2, xlim = c(-0.6, 0.9), ylim = c(-0.8, 0.8), panel.first = rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], border = "chocolate", col = "chocolate2"))
@@ -261,7 +266,7 @@ title("Complement")
 
 # Difference
 
-Difference are all elements in one set not in another set. Coloring this region required full circle to be coloured and difference (center region) to be removed by coloring it differently. 
+Difference are all elements in one set not in another set. Coloring this region required full circle to be colored and difference (center region) to be removed by coloring it differently. 
 
 ```{r}
 circle(n = 2, r = r, h = h, xlim = c(-0.2, 1.7), ylim = c(-0.7, 0.7), xaxt = "n", yaxt = "n", ann = FALSE)
