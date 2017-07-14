@@ -1,0 +1,294 @@
+---
+title: "Additional Mathematics"
+author: "Hellen Gakuruh"
+date: "July 11, 2017"
+output: html_document
+---
+
+```{r, echo=FALSE}
+circle <- function(n = 1, r = 1, h = 0, v = 0, half = FALSE, up = TRUE, plot = TRUE, xlab = "x", ylab = "y", circ.border = "chocolate", lwd = 1, lty = 1, ...) {
+   
+   # x values for n == 1 and n > 1
+   if(n == 1) {
+         x <- list(seq(h - r, h + r, 0.001))
+   } else {
+      if(length(r) == 1) r <- rep(r, n)
+      if(length(h) == 1) h <- rep(h, n)
+      if(length(v) == 1) v <- rep(v, n)
+        x <- lapply(1:n, function(i) seq(h[i] - r[i], h[i] + r[i], 0.001))
+      }
+   
+   
+   # Circle equation
+   circ <- function(x, r, h, v) sqrt(r^2 - (x-h)^2) + v
+   circ2 <- function(x, r, h, v) sqrt(r^2 - (x-h)^2) - v
+   
+   # Full or half circle
+   if(half) {
+      if(up) {
+         y <- circ(x)
+      } else {
+         y <- -circ2(x)
+      }
+   } else {
+      y <- lapply(1:n, function(i) c(circ(x[[i]], r[i], h[i], v[i]), -circ2(rev(x[[i]]), r[i], h[i], v[i])))
+      x <- lapply(x, function(i) c(i, rev(i)))
+   }
+   
+   # Output; plot or y coordinates
+   if(plot == FALSE) {
+      list(x = x, y = y)
+   } else {
+      min_x <- min(sapply(x, min))
+      max_x <- max(sapply(x, max))
+      min_y <- min(sapply(y, min))
+      max_y <- max(sapply(y, max))
+      plot(c(min_x, max_x), c(min_y, max_y), type = "n", xlab = xlab, ylab = ylab, ...)
+      for(i in 1:n) {
+         lines(x[[i]], y[[i]], col = circ.border, lwd = lwd, lty = lty)
+      } 
+   }
+}
+```
+
+After concluding re-introduction to Mathematics, it seemed relevant to apply some of those concepts as well as add (just) a few more mathematical concepts. In that regard in this document we will cover these issues in a dynamic way. Dynamic in that concepts will be added as need be.
+
+Initial topic we will cover is "colouring" circles. Here we want to re-introduce circles as regards formulation of their equation and applying definite intergration to color different sections. 
+
+
+## Formulating circle equation
+
+Circles are graphs whose points have an equal distance from a central point. Distance between center and any point on a cicle is referred to as **radius**.
+
+```{r}
+circle(xlim = c(-2, 2), ylim = c(-1.2, 1.2), circ.border = 4, ann = FALSE, xaxt = "n", yaxt = "n")
+segments(0, 0, 1, 0)
+points(0, 0, pch = 21, bg = 4)
+text(0.5, 0.1, "Radius")
+title("Circle")
+```
+
+
+Distance from one point to another point passing through center is known as **diameter**; this is also similar to two times radius. Distance around circle (outer border) is referred to as **circumference**. 
+
+Basic idea in formulating equation for a circle is this; given radius of a circle and it's central point, we want an equation which outputs x or y values. Since there is no equation which we can use to do this, then we will use mathematical concept of triangles to figure our y values.
+
+Suppose we are given circle below with center at point (0, 0) and radius equal to 1; something referred to as **unit circle**. From definition of a circle, picking any point on this circle should be r distance from center which is 1 in this case.
+
+
+```{r}
+circle(xlim = c(-2, 2), ylim = c(-1.2, 1.2), circ.border = 4, ann = FALSE, xaxt = "n", yaxt = "n", lwd = 2)
+segments(0, 0, c(0.75, 1), c(circ1(0.75), 0), col = 4)
+points(c(0, 0.75), c(0, circ1(0.75)), pch = 21, bg = 4)
+text(0.4, 0.57, "r = 1", srt = 45)
+text(0.5, 0.1, "r = 1")
+title("Circle")
+```
+
+We want to figure out x and y coordinates of points on this graph begining with point (x, y) as shown below. 
+ 
+To do this we make a triangle and specifically a right angled triangle (90 degrees), for us to use concept of **Pythagora's theorem**.
+
+```{r}
+circle(xlim = c(-2, 2), ylim = c(-1.2, 1.2), circ.border = 4, ann = FALSE)
+segments(0, 0, c(0.75, 1), c(circ1(0.75), 0), col = 4)
+segments(0.75, circ1(0.75), 0.75, 0, col = 4)
+points(c(0, 0.75), c(0, circ1(0.75)), pch = 21, bg = 4)
+text(c(0.5, 0.85), c(-0.1 ,0.2), labels = c("x", "y"))
+text(0.37, 0.56, "1", srt = 45)
+text(1, circ1(0.75), "(x, y)", font = 2)
+title("Right angled triangle")
+```
+
+Pythagora's theorem basically states that, for any right angled triangle, if a square is made on each of its sides, then area of its biggest square would be exactly total area of other two sides.
+
+```{r}
+circle(xlim = c(-2, 2), ylim = c(-1.2, 2), circ.border = 4, ann = FALSE, panel.first = grid())#, xaxt = "n", yaxt = "n", lwd = 2)
+segments(0, 0, c(0.75, 1), c(circ1(0.75), 0), col = 4)
+segments(0.75, circ1(0.75), 0.75, 0, col = 4)
+points(c(0, 0.75), c(0, circ1(0.75)), pch = 21, bg = 4)
+text(0.35, 0.56, "1", srt = 45, font = 2)
+text(1, circ1(0.75)+0.2, "(x, y)", font = 2)
+angle1 <- circ1(0.75)
+
+# Side a
+segments(x0 = c(0.75, 0.75+angle1, 0.75+angle1), y0 = c(angle1, angle1, 0), x1 = c(0.75+angle1, 0.75+angle1, 0.75), y1 = c(angle1, 0, 0), col = "chocolate", lty = 2, lwd = 2)
+
+# Side b
+segments(x0 = c(0, 0, 0.75), y0 = c(0, -0.75, -0.75), x1 = c(0, 0.75, 0.75), c(-0.75, -0.75, 0), col = "chocolate", lty = 2, lwd = 2)
+
+# Side c
+segments(0.75, circ1(0.75), -0.25, circ1(0.75)+1, col = "chocolate", lty = 2, lwd = 2)
+segments(-0.25, circ1(0.75)+1, -1, 1, col = "chocolate", lty = 2, lwd = 2)
+segments(0, 0, -1, 1, col = "chocolate", lty = 2, lwd = 2)
+
+text(c(0.3, 0.85), c(-0.1, 0.3), c(0.75, round(circ1(0.75), 1)), font = 2)
+text(c(1.3, 0.3, -0.5), c(0.3, -0.6, 1.3), LETTERS[1:3], font = 2, col = 4)
+
+title("Pythagora's theorem")
+```
+
+From plot above, area of C is 1 that is $1^2$, area of A is `r angle1^2` while that of B is `r 0.75^2`. Area of A and B is 1 ($0.6614378^2 + 0.75^2$)  
+
+Symbolically we can express this as
+
+$$a^2 + b^2 = c^2$$
+
+This therefore means we can compute one of these variables given other two variables like we can compute y if we made y subject of our equation.
+
+$$y = \pm \sqrt{r^2 - (x - h)^2} + v$$
+
+Let us use this equation to plot venn diagrams showing relationships of sets.
+
+
+We begin with unions which require colouring of both circles.
+
+
+```{r "union-plot"}
+circ1 <- function(x, r = 1, h = 0, v = 0) sqrt(r^2 - (x-h)^2) + v
+circ2 <- function(x, r = 1, h = 0, v = 0) sqrt(r^2 - (x-h)^2) - v
+#
+r <- 0.5
+h <- c(0.4, 1.1)
+circle(n = 2, r = r, h = h, xlim = c(-0.2, 1.7), ylim = c(-0.7, 0.7), xaxt = "n", yaxt = "n", ann = FALSE)
+
+left1  <- seq(h[1] - r, h[1], 0.001)
+right1 <- seq(h[1], h[1] + r, 0.001)
+left2  <- seq(h[2] - r, h[2], 0.001)
+right2 <- seq(h[2], h[2] + r, 0.001)
+
+# Colouring circle
+rect(xleft = left1[-length(left1)], ybottom = 0, xright = left1[-1], ytop = circ1(left1[-length(left1)], r = r, h = h[1]), border = "chocolate", col = "chocolate2")
+rect(xleft = left2[-length(left2)], ybottom = 0, xright = left2[-1], ytop = circ1(left2[-length(left2)], r = r, h = h[2]), border = "chocolate", col = "chocolate2")
+rect(xleft = left1[-length(left1)], ybottom = -circ2(left1[-length(left1)], r = r, h = h[1]), xright = left1[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+rect(xleft = left2[-length(left2)], ybottom = -circ2(left2[-length(left2)], r = r, h = h[2]), xright = left2[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+rect(xleft = right1[-length(right1)], ybottom = 0, xright = right1[-1], ytop = circ1(right1[-length(right1)], r = r, h = h[1]), border = "chocolate", col = "chocolate2")
+rect(xleft = right2[-length(right2)], ybottom = 0, xright = right2[-1], ytop = circ1(right2[-length(right2)], r = r, h = h[2]), border = "chocolate", col = "chocolate2")
+rect(xleft = right1[-length(right1)], ybottom = -circ2(right1[-length(right1)], r = r, h = h[1]), xright = right1[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+rect(xleft = right2[-length(right2)], ybottom = -circ2(right2[-length(right2)], r = r, h = h[2]), xright = right2[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+
+coords <- circle(n = 2, r = r, h = h, plot = FALSE)
+lines(coords$x[[1]], coords$y[[1]], col = 4, lwd = 2)
+lines(coords$x[[2]], coords$y[[2]], col = 4, lwd = 2)
+text(h, 0.6, labels = LETTERS[1:2], font = 2, cex = 2)
+text(c(0.4, 0.4, 0.75, 1.1, 1.1), c(0.2, -0.2, 0, -0.2, 0.2), labels = letters[1:5], font = 2, cex = 2)
+title("Union")
+```
+
+A circle has four different intervals, to shade it requires using rectangles with height set to specific interval. For example left quandrant will have it's rectangles with height of it's left point. These rectangles are made to very small values so that they leave no space. 
+
+
+# Intersect
+
+Intersect requires us to color only middle area, that is intersecting region.
+
+To do this we need to view this region like a circle as it has four intervals. We then locate it's center and make rectangles in each of these four areas with heights of each interval. Note, heights will be those of it's larger circles.  
+
+```{r}
+circle(n = 2, r = r, h = h, circ.border = 4, lty = 2, xlim = c(-0.2, 1.7), ylim = c(-0.7, 0.7), xaxt = "n", yaxt = "n", ann = FALSE)
+
+left  <- seq(0.6, 0.75, 0.001)
+right <- seq(0.75, 0.9, 0.001)
+
+ytop_L    <-  circ1(left2, r = r, h = h[2])[1:150]
+ybottom_L <- -circ2(left2, r = r, h = h[2])[1:150]
+ytop_R    <-  circ1(coords$x[[1]][851:1001], r = r, h = h[1])
+ybottom_R <- -circ2(coords$x[[1]][851:1001], r = r, h = h[1])
+
+# Colouring
+
+rect(xleft = left[-length(left)], ybottom = 0, xright = left[-1], ytop = ytop_L, border = "chocolate", col = "chocolate2")
+rect(xleft = left[-length(left)], ybottom = ybottom_L, xright = left[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+rect(xleft = right[-length(right)], ybottom = 0, xright = right[-1], ytop = ytop_R, border = "chocolate", col = "chocolate2")
+rect(xleft = right[-length(right)], ybottom = ybottom_R, xright = right[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+
+#
+lines(coords$x[[1]], coords$y[[1]], col = 4, lwd = 2)
+lines(coords$x[[2]], coords$y[[2]], col = 4, lwd = 2)
+text(h, 0.6, labels = LETTERS[1:2], font = 2, cex = 2)
+text(c(0.4, 0.4, 0.75, 1.1, 1.1), c(0.2, -0.2, 0, -0.2, 0.2), labels = letters[1:5], font = 2, cex = 2)
+title("Intersect")
+```
+
+
+# Disjoint
+
+Disjoint are basically two circles that do not touch each other, therefore a no brainer to plot. 
+
+
+```{r}
+circle(n = 2, r = 0.5, h = 0:1, circ.border = 4, lwd = 2, xlim = c(-0.7, 1.7), ylim = c(-0.6, 0.8), xaxt = "n", yaxt = "n", ann = FALSE)
+text(0:1, 0.65, LETTERS[1:2], font = 2)
+text(x = c(-0.15, 0.15, 0.85, 1.15), y = 0, labels = letters[1:4], font = 2, cex = 1.5)
+title("Disjoint")
+```
+
+
+
+# Complement
+
+Complement of a set are all elements in another but not that set. Like complement of A here are all elements in universal set that are not in A. We show this with a transparent circle for A and coloured background to indicate universal set. 
+
+Initially began with backgound colour by using one rectangle then coloured circle.  
+
+```{r}
+circle(n = 1, r = 0.5, circ.border = 4, lwd = 2, xlim = c(-0.6, 0.9), ylim = c(-0.8, 0.8), panel.first = rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], border = "chocolate", col = "chocolate2"))
+
+#
+x_L <- seq(-0.5, 0, 0.001)
+x_R <- seq(0, 0.5, 0.001)
+
+ytop_L    <-  circ1(x_L[-length(x_L)], r = 0.5)
+ybottom_L <- -circ2(x_L[-length(x_L)], r = 0.5)
+ytop_R    <-  circ1(x_R[-length(x_R)], r = 0.5)
+ybottom_R <- -circ2(x_R[-length(x_R)], r = 0.5)
+
+
+rect(xleft = x_L[-length(x_L)], ybottom = 0, xright = x_L[-1], ytop = ytop_L, border = colors()[1], col = colors()[1])
+rect(xleft = x_L[-length(x_L)], ybottom = ybottom_L, xright = x_L[-1], ytop = 0, border = colors()[1], col = colors()[1])
+rect(xleft = x_R[-length(x_R)], ybottom = 0, xright = x_R[-1], ytop = ytop_R, border = colors()[1], col = colors()[1])
+rect(xleft = x_R[-length(x_R)], ybottom = ybottom_R, xright = x_R[-1], ytop = 0, border = colors()[1], col = colors()[1])
+
+coords2 <- circle(n = 1, r = 0.5, plot = FALSE)
+
+lines(coords2$x[[1]], coords2$y[[1]], col = 4, lwd = 2)
+
+text(c(0, 0.6), 0, c("A", "A'"), font = 2, cex = 1.5)
+title("Complement")
+```
+
+
+
+# Difference
+
+Difference are all elements in one set not in another set. Coloring this region required full circle to be coloured and difference (center region) to be removed by coloring it differently. 
+
+```{r}
+circle(n = 2, r = r, h = h, xlim = c(-0.2, 1.7), ylim = c(-0.7, 0.7), xaxt = "n", yaxt = "n", ann = FALSE)
+
+# Colouring circle
+rect(xleft = left1[-length(left1)], ybottom = 0, xright = left1[-1], ytop = circ1(left1[-length(left1)], r = r, h = h[1]), border = "chocolate", col = "chocolate2")
+rect(xleft = left1[-length(left1)], ybottom = -circ2(left1[-length(left1)], r = r, h = h[1]), xright = left1[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+rect(xleft = right1[-length(right1)], ybottom = 0, xright = right1[-1], ytop = circ1(right1[-length(right1)], r = r, h = h[1]), border = "chocolate", col = "chocolate2")
+rect(xleft = right1[-length(right1)], ybottom = -circ2(right1[-length(right1)], r = r, h = h[1]), xright = right1[-1], ytop = 0, border = "chocolate", col = "chocolate2")
+
+ytop_L    <-  circ1(coords$x[[2]][1:150], r = 0.5, h = h[2])
+ybottom_L <- -circ2(coords$x[[2]][1:150], r = 0.5, h = h[2])
+ytop_R    <-  circ1(coords$x[[1]][851:1000], r = 0.5, h = h[1])
+ybottom_R <- -circ2(coords$x[[1]][851:1000], r = 0.5, h = h[1])
+
+rect(xleft = left[-length(left)], ybottom = 0, xright = left[-1], ytop = ytop_L, border = colors()[1], col = colors()[1])
+rect(xleft = left[-length(left)], ybottom = ybottom_L, xright = left[-1], ytop = 0, border = colors()[1], col = colors()[1])
+rect(xleft = right[-length(right)], ybottom = 0, xright = right[-1], ytop = ytop_R, border = colors()[1], col = colors()[1])
+rect(xleft = right[-length(right)], ybottom = ybottom_R, xright = right[-1], ytop = 0, border = colors()[1], col = colors()[1])
+
+
+
+lines(coords$x[[1]], coords$y[[1]], col = 4, lwd = 2)
+lines(coords$x[[2]], coords$y[[2]], col = 4, lwd = 2)
+text(h, 0.6, labels = LETTERS[1:2], font = 2, cex = 2)
+text(c(0.4, 0.4, 0.75, 1.1, 1.1), c(0.2, -0.2, 0, -0.2, 0.2), labels = letters[1:5], font = 2, cex = 2)
+title("Difference")
+```
+
+
