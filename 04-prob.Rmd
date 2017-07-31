@@ -1,0 +1,1620 @@
+---
+output: 
+   html_document:
+      css: ../Data_Mgt_Analysis_and_Graphics_R/Pages/page/css
+---
+
+```{r "source-functions-probability", echo=FALSE}
+permutation <- function(n, k) {
+   prod(n:((n-k)+1))
+}
+
+combn2 <- function(n, k) {
+   prod(n:1)/(prod(k:1) * prod((n - k):1))
+}
+```
+
+
+## Introduction to Probability{#probability}
+
+Welcome to fascinating and intriguing concept of Probability. This is one of most interesting mathematical concept ever theorized, at least in my opinion. Probability is foundation of statistical reasoning and in deed quite applicable in day-to-day life.
+
+This chapter aims to introduce or re-introduce probability as a concept. Although probability can be quite intriguing and for that matter quite complex, here we want to take it's basic idea and relate it to real life scenarios for which we seek to statistically analyse.   
+
+Broadly we will go over these topics in probability:
+
+- [Basic Concept of Probability](#basic-prob)
+- [Counting Events](#counting)
+- [Conditional Probability](#Condi-prob)
+- [Independent Probability](#Indep-prob)
+- [Introduction to Discrete Probability]
+- [Introduction to Continuous Probability]
+- [Expectation]
+- [Discrete Distributions]
+- [Continuous Distributions]
+- [Joint Distributions]
+
+
+### Basic concept of probability{#basic-prob}
+
+In almost all issues happening around us, probability is used to portray magnitude, for example, a win in a coin toss, number of hits to a new website, and an educated or informed expectation on performance of a new employee.
+
+These three examples present to us what we can define as types of probability or methods of determining probability, that is, from a equally likely point of view, an empirical point of view and from a subjective point of view. 
+
+We shall go over these methods in this section but before that we shall review some concepts which are essential in defining these methods. These concepts include random processes, outcome, sample space, and events.
+
+For illustration we shall use two very basic examples, tossing coin(s) and throwing one or a pair of dice. These shall form our basis for reasoning probability in statistical applications.
+
+As we wind up on types of probability, we shall note difference of probability and odds of an event as these two terms are often interchangeably used without regard to their meaning. 
+
+#### Random Process
+
+When we toss a coin or throw a dice, we usually do not know what will come up, it could be a head for a coin toss or a 4 in a dice throw. Basic idea here is that we do not know what will actually happen and tossing a coin or throwing a dice again will often yield a different value. This uncertainty and fact that a different value can be obtained with another toss or throw is referred to as a random process.
+
+In as much as we refer to them as unknown and random, probability seeks to determine an expected outcome given repeated processes. So for something like a dice throw, we want to determine probability of a 5 coming up by outcome many dice throws. Therefore we would conclude, even without throwing a dice, that probability of getting a 5 which is a random process, is a certain value based on many dice throws.      
+
+This value we attach to a process as it's probability is what we can refer to as it's theoretical probability; it is it's ideal probability, but probability of getting a 5 given one throw of a dice is it's empirical probability (an actual finding). We go into length on these two in our section on types of probability. 
+
+<u>Exercise</u>
+
+In each of these processes, determine if it is random or not
+
+1. Getting a certain score in an evaluation
+1. Wearing a certain outfit to a function
+1. Winning lottery
+
+<u>Solutions</u>
+
+1. Random, you might work towards it but you are not certain you would get exactly that score
+1. Not random, you can choose to wear it or not depending on it's availability
+1. Pure random as there are many possible outcomes 
+
+#### Outcome
+
+Outcomes are possible results of a random process. For example, in a coin toss, possible outcome is a heads or a tails. For a dice, it's possible outcome are 1, 2, 3, 4, 5, or 6. 
+
+Note, there is only one outcome in each of these random process, that is, we expect a head or a tail in a coin toss and 1, 2, 3, 4, 5, or a 6 in a dice throw. This means if we get a head then we cannot get a tail and if we get a tail we cannot get a head, similar statement can be said of a dice throw. For such kind of outcomes we refer to them as **mutually exclusive** as getting one outcome means we cannot get any other outcome.
+
+If however we had two coin tosses, possible outcomes increases from just a head and a tail to combinations of heads and tails. Therefore it is possible to get a head and a tail as an outcome which means it is not mutually exclusive.  
+
+
+#### Sample space
+
+Sample space is a list of <u>all</u> possible outcomes of a random process and denoted as $S$. For one coin toss $S$ = ("H", "T") where "H" = heads and "T" = tails. For two coin toss, $S$ = ("HH", "HT", "TH", "TT"). 
+
+<u>Exercise</u>
+
+In each of these random processes, give their sample space and indicate if their outcomes are mutually exclusive.
+
+1. One throw of a six-sided dice
+1. Two throws of a six-sided dice
+1. Getting a four in initial throw of a dice when thrown twice 
+
+<u>Solutions</u>
+
+1. $S$ = (1, 2, 3, 4, 5), a total of six outcomes: Outcomes are mutually exclusive
+[2.]{#two-throws} $S$ = {(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6)}, a total of 36 outcomes: Outcomes are mutually exclusive
+1. $S$ is similar to number [2](#two-throws) but outcomes are not mutually as there are six outcome that have a four in their initial throw, these are {(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6)}  
+
+**Guiding remark:** in determining mutually exclusivity, determine if there is one or more than one possible outcome from a sample space that meets given random process, if there is only one outcome then it is mutually exclusive. 
+
+Do take note sample space we have mentioned thus far are what we refer to as **discrete**: discrete sample space are composed of countable outcomes. A sample space can also be composed of uncountable outcomes and as such referred to as **continuous**. For now we will focus on discrete sample space and introduce continuous sample space as we go over concept of probability of continuous random processes.  
+
+
+#### Events
+
+Events are collections of outcomes from a random process, they are also subsets of sample space. Events are denoted by capital letters such as $E$.
+
+Obtaining one outcome is referred to as a **simple event** and therefore events can be viewed as one or more simple events. Throwing one dice is a simple event as we expect only one outcome, but from that one throw we can have multiple events like getting an even number which has simple events of getting a 2, a 4, and a 6. 
+
+<u>Exercise</u>
+
+In each of these statements, indicate whether it is a simple event or not:
+
+1. One coin toss
+1. Two coin toss
+1. Getting a head and a tail in two coin tosses
+
+<u>Solutions</u>
+
+1. Simple event because there can only be one outcome
+1. Simple event as there can only be one outcome even though it would be in pairs like "HT".
+1. Not a simple event as there are two possible outcomes "HT" and "TH"
+
+
+**Guiding Remark:** In determining if it is a simple event, think of it's sample space, if event has mutually exclusive outcomes, then it is a simple event.  
+
+When we view events as subsets of a sample space then we can define them in terms of set for which we can use set notation and Venn diagrams to show relationship between different events.
+
+For example, we can refer to mutually exclusive outcomes as disjointed, occurrence of one outcome excludes occurrence of another. Getting a six in a dice throw means we cannot get 1 through 5.
+
+[Venn diagram - disjoint]
+
+A good example of a union is that of event "A" and "B" where "A" is event of a two dice throws with initial throw as 2 and "B" as event of an even total from a two dice throw.   
+
+[Venn diagram - union]
+
+Taking event A and B defined above, intersection of these events occurs is where total of two dice throws is an even number, these are (2, 2) = 4 (2, 4) = 6, (2, 6) = 8.
+
+[Venn diagram - intersection of A and B]
+
+<u>Exercise</u>
+
+Using Venn diagrams, show indicated relationships of these events for a two dice throw:
+
+- Event A: getting a total of 6 
+- Event B: getting two successive odd numbers when dice is thrown twice   
+
+1. Event A and B
+1. Event A or B
+1. Intersection of event A and B
+1. Compliment of A
+
+<u>Solution</u>
+
+1. All outcomes of A and all outcomes of B
+[Venn diagram - union]
+1. Same as 1
+1. Elements shared by A and B {(1, 5), (3, 3), (5, 1)}
+1. Everything not in a that included elements of B not in A (36 -2 = 34)
+
+
+#### Types of probability
+
+At start of this chapter we mentioned three types of probabilities, these are probability of equally likely outcomes, empirical probability and subjective probability.
+
+In this section we go through these essential concepts in probability.
+
+##### Probability of Equally Likely Outcomes
+
+When outcomes of an event have an equal chance of happening, then they are referred to as **equally likely**. For example, in a coin toss, chance of a coin landing on a head is similar to that of a coin landing on a tail, assuming it is a fair coin.
+
+<u>Equally likely and Mutually Exclusive Outcomes</u>
+
+Let us take a pose here and reflect on this two essential term in determining probability. We have defined mutually exclusive outcomes as outcomes which can only occur as an individual outcome out of all possible outcomes (sample space). We have also just defined equally likely outcomes as outcomes with an equal chance of occurring.
+
+Question we want to reflect on is this, "Are mutually exclusive outcomes also equally likely outcomes" and by extension "Is it possible for mutually exclusive outcomes not to be equally likely or equally likely outcomes not to be mutually exclusive.
+
+To begin with, mutually exclusive outcomes can be equally likely. For example, in one throw of a dice, possible outcomes (sample space) are 1, 2, 3, 4, 5, and 6. There can only be one outcome when one dice is thrown, thus it is mutually exclusive. For a fair dice, all these outcomes have an equal chance of occurring, thus they are equally likely. 
+
+Now let us determine if mutually exclusive outcomes cannot be equally likely, that is, can a random process have one outcome when it occurs but it's possible outcome do not have an equal chance of occurring. Indeed it is possible, consider a situation where we have an unfair dice, some sides might have a higher chance of coming up than other side yet we can only get one outcome from a throw. So it is possible to have mutually exclusive outcomes that are not equally likely.
+
+Our final query is whether it is possible to have outcomes that are not mutually exclusive but are equally likely. Take an event of getting even numbers in one throw of a dice, there are three possible outcomes (2, 4, 6) from our sample space of (1, 2, 3, 4, 5, 6). Each of these outcomes have an equal chance of occurring thus they are equally likely. We therefore conclude noting it is possible to have equally likely outcomes which are not mutually exclusive.
+
+With that we now proceed to defining probability for only equally likely outcomes which we now know can include outcomes that are not mutually exclusive. 
+
+For an event "E" with equally likely outcomes, probability denoted with $\mathbb{P}$ is given by:
+
+$$\mathbb{P}(\text{E}) = \frac{\text{Number of outcomes in E}}{\text{Total number of outcomes in sample space}}$$
+
+**Examples**
+
+1. Probability of getting a 2 in one dice throw is 1 divided by 6 (1/6 $\approx$ `r round(1/6, 2)`). 
+1. Probability of getting an even number is 3/6 = 1/3 $\approx$ `r round(1/3, 2)`. This is because there are three possible outcomes (2, 4, 6) and there are six element in sample space (1, 2, 3, 4, 5, 6)
+
+<u>Exercise</u>
+
+1. What is probability of getting a head in one toss of a coin.
+1. What is probability of getting two consecutive heads in two tosses of a coin.
+1. What is probability of getting a head then a tail in two coin tosses
+1. what is probability of getting two even numbers in two throws of a dice.
+1. What is probability of getting at most a total of 6 in two throws of a dice. 
+
+
+<u>Solution</u>
+
+1. For one coin toss probability is 1/2 = 0.5. This is because there is only one head outcome out of a sample space of two ("head", "tail")
+1. Probability of getting two consecutive heads in two tosses of a coin is 1/4 = 0.25. This because there are four possible outcomes (sample space) and only one which meets event. This is shown in table below
+
+```{r}
+matrix(c("HH", "TH", "HT", "TT"), nrow = 2, dimnames = list("Initial throw" = c("Head", "Tail"), "Second throw" = c("Head", "Tail")))
+```
+
+3. Probability of getting a head then a tail in two coin tosses is 1/4 = 0.25. This because there is only one outcome that meets this event and there are four possible outcomes in total. This is shown in above table as "HT"
+4. Probability of getting two even numbers in two throws of a dice is 9/36 = 0.25. This because there possible outcomes out of a sample space with 36 outcomes, these nine outcomes are {(2, 2), (2, 4), (2, 6), (4, 2), (4, 4), (4, 6), (6, 2), (6, 4), (6, 6)}. Sample space is as listed [before](#two-throws).
+5. Probability of getting at most a total of 6 in two throws of a dice is 15/36 $\approx$ `r round(15/36, 2)`. This is because we have 15 outcomes that meet this event (have a total $\leqslant$ 6) and a total of 36 outcomes in sample space. These 15 outcomes are colored below.  
+
+```{r}
+op <- par("mar", "mai")
+par(mar = c(0,0,0,0), mai = c(0,0,0,0))
+
+plot(c(1.5, 9.5), c(-0.5, 8), type = "n", ann = FALSE, axes = FALSE)
+rect(3, 1, 4, 6, border = "chocolate", col = "chocolate2")
+rect(4, 2, 5, 6, col = "chocolate2")
+rect(5, 3, 6, 6, col = "chocolate2")
+rect(6, 4, 7, 6, col = "chocolate2")
+rect(7, 5, 8, 6, col = "chocolate2")
+segments(2:9, 0, 2:9, 7)
+segments(2, 0:7, 9, 0:7)
+text(3.5:8.5, 6.5, 1:6, font = 2)
+text(2.5, 5.5:0.5, 1:6, font = 2)
+text(3.5:8.5, 5.5, 2:7)
+text(3.5:8.5, 4.5, 3:8)
+text(3.5:8.5, 3.5, 4:9)
+text(3.5:8.5, 2.5, 5:10)
+text(3.5:8.5, 1.5, 6:11)
+text(3.5:8.5, 0.5, 7:12)
+text(5.5, 7.3, "Sample Space: Two throws of a dice", font = 2)
+
+par(mar = op$mar, mai = op$mai)
+```
+
+
+Quite literally take a coin and toss it ten times. How many heads did you get and how many tails did you get. Based on probability of equally likely outcomes, you should have about 5 heads and 5 tails. Chances are you did not get this and one of those had a greater occurrence than the other. But yet again if you were like me and actually got 5 heads and 5 tails, then indeed you upheld notion of equally likely outcomes. Point here is that probability of equally likely outcomes is more of a theoretical probability than an actual probability, it is a probability we expect from outcomes given many takes of a random process. Therefore refer to probability of equally likely outcomes as an **expected probability**.
+
+
+##### Empirical Probability 
+
+Empirical probability is probability of actual (empirical) data, and computed as relative frequency of given finding. 
+
+For example, in an urn containing 40 spheres numbered 1 through 5 as shown below
+
+```{r}
+set.seed(3640)
+spheres <- sample(1:5, 40, TRUE)
+spheres
+```
+
+We can compute relative frequency of each sphere as
+
+```{r}
+mat <- matrix(c(1:5, as.vector(table(spheres)), as.vector(prop.table(table(spheres)))), ncol = 3, byrow = FALSE, dimnames = list(c("", "", "", "", ""), c("Sphere", "Frequency", "Relative frequency")))
+mat
+```
+
+
+Thereby we can estimate chance of picking a 2 from this urn as `r mat[2, 3]`. We also now know there is a higher chance of picking a `r mat[which.max(mat[, 3]), 1]` from this urn than any other number. 
+
+<u>Exercise</u>
+
+1. A dice is thrown 10 times and outcome given as follows, estimate probability of:   
+
+```{r}
+(die_throws <- table(sapply(1:10, sample, x = 6, size = 1)))
+```
+
+a) Subsequent throw
+b) That subsequent throw is 2
+c) which value is less likely to be subsequent outcome
+
+2. Explain difference between probabilities obtained  from dice throw above and those expected from theoretical probability
+
+<u>Solutions</u>
+
+```{r}
+prop2 <- prop.table(die_throws)
+max_prop <- names(prop2[which(prop2 == max(prop2))])
+a <- ifelse(length(max_prop) == 1, "this is", "these are")
+min_prop <- names(prop2[which(prop2 == min(prop2))])
+b <- ifelse(length(min_prop) == 1, "is", "are")
+```
+
+1. 
+    a. subsequent throw would most likely be value with highest relative frequency, `r a` `r max_prop`.
+    b. Chance of subsequent throw being a 2 is `r as.vector(prop2[2])`
+    c. Value(s) with least likelihood of being a subsequent outcome `r b` `r min_prop`
+1. Theoretical probability would have about `r round(1/6, 2)` for each outcome. Reason theoretical and empirical probabilities differ is because theoretical probabilities are based on long run expectation of an outcome while empirical probabilities are based on few occurrences. We would expect after multiple throws, probability of empirical finding to be similar to those of empirical probability. We can confirm this by making 900,000 throws. 
+
+```{r, cache=TRUE}
+die_throws2 <- table(sapply(1:900000, sample, x = 6, size = 1))
+matrix(c(c(as.vector(die_throws2), 900000), c(round(as.vector(prop.table(die_throws2)), 2), 1)), byrow = FALSE, ncol = 2, dimnames = list(c(1:6, "Total"), c("Frequency", "Relative Frequency")))
+```
+
+
+##### Subjective probability
+ 
+Subjective probability are probabilities based on educated knowledge or experience. 
+
+An example of a subjective probability is: "There is a 60% chance that you will like probability once you are done reading this chapter". This probability could be based on past experience in which students grew to enjoy probability once they were done reading this chapter and it is not based on any solid findings.
+
+<u>Exercise</u>
+
+List as many subjective probabilities as you can.
+
+**Guiding remark:** It should not be based on any finding or empirical data but it should have relevance and knowledge to justify it.
+
+
+#### Properties of Probabilities
+
+There about four properties which define probability, these are
+
+1. Probability of an event A denoted as $\mathbb{P}(A)$ must be between 0 and 1 inclusive, that is $0 \leqslant \mathbb{P}(A) \leqslant 1$
+1. Any impossible event has a probability of 0
+1. Any event that is certain to occur has a probability of 1
+1. For a Sample space with outcomes $a_1, \text{ ...., } a_n$ (discrete sample space), total probability is given by $\mathbb{P}(a_1) + \mathbb{P}(a_2) + \mathbb{P}(a_3) + \text{ ...., } + \mathbb{P}(a_n)$
+
+
+### Counting{#counting}
+
+We have so far been dealing with events which are relatively basic and therefore able to determine number of ways it can occur and it's sample space. However, there are numerous other situations which these two values would not be as obvious. For that we would need to count outcomes that form it's sample space and those that meet given event. 
+
+For example, we might want to establish probability of getting 2 heads and 8 tails in 10 tosses of a coin. Here we need to know sample space, that is how many heads and tails we can get from 10 tosses and then find out how many of these outcomes has 2 heads and 8 tails.
+
+To answer this, we need to get some basics on counting outcomes. we will do this by considering some basic examples of situations we encounter daily. 
+
+But before that there are four points we need to be aware of before we delve into some scenarios, these are:
+
+1. Sample space $S$
+1. Number of items needed $i$
+1. Selection done with or without replacement
+1. Whether we are going to take note of selection order
+
+Let us review these four points and we begin with sample space. As we already now know, we must select outcomes of interest from a known sample space if we are dealing with discrete (countable) random processes. In that case we would need to begin by getting $S$.
+
+$i$ is basically what we what in terms of number of items
+
+Third point means when selecting an item, we can do so by replacing each selected item before a subsequent selection or by continuing with selection without replacing.
+
+Fourth point means we can take note of what we have selected in terms of what was selected initially and what was selected there after.
+
+Out of all these four point, there two ways we can make a selection, by one swoop or taking them one-by-one. When we select what we need all at one go, then we cannot know their order. But if we draw one-by-one, then we can decide to take note of how spheres are drawn or we can decide not to do so.  
+
+If we combined our four points with these two way of selection, then we can formulate three possible scenarios:
+
+1. We hand pick an item one-by-one, taking note of how they are selected and replacing each item once they are noted. In this scenario it is possible for $S$ to be less than $i$ due to replacement. A good example of this is a lottery drum with numbered spheres, once a sphere is drawn and winning number is recorded, sphere is replaced back into drum for possible re-selection until all required numbers are filled.
+1. Second scenario is where we select an item one-by-one and taking note of their order. However in this scenario we are not replacing selected items and therefore $i$ must be more than $S$. A good example of where order matters and items selected are not eligible for re-selection is selection of class representatives where posts have an hierarchy. If these posts were 2, we expect post of representative one to be higher than that of representative two, therefore order does matter. We also expect any student selected to fill representative one post to be ineligible for representative two post therefore there are no replacements. This example our $i = 2$ and $S$ can be 100 meaning there are 100 eligible student for both posts.
+1. Our third scenario is where we collectively pick items needed at one go which means we will not be able to know which item was selected initially and which items followed. We are also not replacing items meaning we have only one selection. For this scenario, $i$ must be more than $S$. A good example of where order of selection does not matter and items cannot be re-selected is selection of students to go for a class trip. Here we are not concerned on who is selected initially or who follows, all we want is a certain number of students, therefore we could very well write "Yes", "No" on a pieces of paper and let them randomly select one piece.
+
+With these three scenarios we can generalize counting as involving:
+
+1. Ordered with replacement
+1. Ordered without replacement, and
+1. Unordered with replacement
+
+To distinguish between ordered and unordered outcomes, we will denote ordered outcomes with parenthesis for example (a, b, c) which is not similar to (c, a, b) and unordered outcomes with curly brackets like {a, b, c} which similar to {c, a, b}.
+
+<u>Ordered with replacement</u>
+
+In our scenario one we presented an example of a lottery drum, let us pick it up and compute possible outcomes. 
+
+Suppose in our loto we require winning ticket to have 8 numbers. In our loto drum we have 5 spheres for which we can select, record and replace any selected sphere for another draw. We therefore want to find know how many possible outcomes can be made.
+
+Note our $i = 8$ and $S = 5$ 
+
+Now to get number of possible outcomes we need to think of it this way, we want 8 number, therefore we have 8 slots to fill.
+
+$$\frac{}{1} \space{} \frac{}{2} \space{} \frac{}{3} \space{} \frac{}{4} \space{} \frac{}{5} \space{} \frac{}{6} \space \frac{}{7} \space{} \frac{}{8}$$
+
+For our initial slot we have 5 possible sphere values which can fill it, and since we are placing sphere in our drum then our second slot also has 5 possible sphere values to fill. In this same way all other slots have 5 possible sphere values to fill them. Therefore, there are $5 * 5 * 5 * 5 * 5 * 5 * 5$ or simply $5^8 =$ `r 5^8` possible outcomes 
+
+In general, all ordered possible outcomes of $i$ numbers selected from 1 through $S$ with replacement is given by $i^S$ 
+
+<u>Ordered without replacement (Permutation)</u>
+
+In our second scenario we gave an example of a class interested in filling hierarchical posts, that is post of class representative one and class representative to. We noted that one a student is selected for position one, they were not eligible for position two. 
+
+Therefore for a class of $S = 100$ with posts to be filled being $i = 2$, we can reason out all possible outcomes these way.
+
+For class rep one, all 100 students have an equal chance of filling that position, however, for post two there would only be 99 students eligible to fill that post given that student who filled post one is no longer eligible, therefore there are $100 * 99 =$ `r 100*99` possible outcomes or way to fill these two posts.
+
+Take note, since order matters here, selecting "Janice and Hellen" for position one and two is not similar to selecting "Hellen and Janice". These ordered outcomes are known as **Permutations** and in this case we we can refer to our example as "Permutation of {1, ..., 100}".
+
+In general, for any $i$ and $S$, number of permutation of $i$ from {$1, ..., S$} is given by:
+
+$$^S\mathbb{P}_i = n(n-1)(n-2)...(n-k+1)$$
+
+For simplicity, we can re-express this expression as:
+
+$$^S\mathbb{P}_i = \frac{S!}{(S-i)!}$$
+
+Please read appendix on factorial to know how this was done.
+
+<u>Unordered without replacement (Combination)</u>
+
+In our third scenario we had an example where we wanted to select a group of students to go for a class trip. As mentioned we are not concerned with who is selected initially or who follows, we are only interested in getting a certain number from all eligible class students.
+
+In that case suppose we are interested in five students from a possible class of 100 students and selecting "Janice and Hellen" is similar to "Hellen and Janice", how many possible outcomes can we get.
+
+We can reason as we did before, that is, we have five slots to fill for which we have 100 students who can fill them. We are also not allowing a student to be selected more than once. Therefore for first slot we have all 100 students as possible outcome, 99 for second slot, 98 for third slot, 97 for fourth slot and 96 for fifth slot. But doing this means "Janice and Hellen" is different from "Hellen and Janice" or simply put order of who is selected matters which is not what we want.
+
+To prove that permuted outcomes are ordered, let us take a smaller example like getting all possible outcomes of a two word arrangement given 4 letters. That is $S = 4$ and consist of letters "a", "b", "c", and "d" while $i = 2$. Since we have two slots to fill then we have $4 * 3 =$ `r 4*3` permuted outcomes, these are:
+
+```{r}
+row1 <- c("a","a", "a", "b", "b", "b", "c", "c", "c", "d", "d", "d")
+row2 <- c("b", "c", "d", "a", "c", "d", "a", "b", "d", "a", "b","c")
+matrix(data = c(row1, row2), nrow = 2, byrow = TRUE, dimnames = list(c("",""),  1:12))
+```
+
+Notice 1 and 4, 2 and 7, 3 and 10, 5 and 8, 6 and 11, 9 and 12 are similar with exception of order, hence permutation allows duplication of arrangements as it considers order of it's elements.
+
+Since for us now we consider {a, b} = {b, a}, then we need to eliminate these duplicates. In this example we have 6 duplicated outcomes which means we need to figure out how to get rid these duplicates to be left only 6 outcomes. 
+
+So how do we get 6 from 12, mathematically this means dividing 12 by 2. This 2 is simply number of ways we can arrange 2 items given 2. That is, given $S = 2$ and $i = 2$ all possible ordered arrangements without replacement is $2 * 1 = 2$.   
+
+Generally, selecting $i$ unordered items from $S$ without replacement is known as **combinations** and we can reason out a formula to compute combinations as follows:
+
+$$ ^SC_i = \frac{^S\mathbb{P}_i}{i!} = \frac{S!}{(S-i)!i!}$$
+
+Do note, in most probability literature $S = n$ and $i = k$. Also $^SC_i$ which means "S choose i" can be denoted as $S \choose i$.
+
+Going back to our initial example where we wanted to select 5 from 100 students for a class trip, we can compute all possible outcomes by combination that is "100 choose 5".
+
+$$^{100}C_5 = {100 \choose 5} = \frac{^{100}\mathbb{P}_5}{5!} = \frac{100!}{(100-5)!5!} = 75,287,520$$
+
+This means we have 75,287,520 possible combinations of 5 students from a class with 100 students, quite interesting isn't it.
+
+<u>Exercises</u>
+
+1. Four people need to cross a certain river with a boat which can carry only two passengers, how many possible pairing are possible if:
+    a. order mattered
+    a. order did not matter
+1. 100 patients are seen in a clinic, four of them are exposed to a certain disease. What is probability that 6 of these 100 patients chosen randomly for pre-screening would be unexposed.
+1. A safe has a four pin code used to open it, what is probability of initial two numbers being 36.
+1. How many ways are there to arrange word "Hellen"
+
+
+<u>Solutions</u>
+
+1. a. $^4P_2 = 12$  b. ${4 \choose 2} = 6$
+1. $P(unexposed) =$ # of all possible combinations of 6 unexposed patients/All possible combinations of 6 from all patients. This is given by ${94 \choose 6}/{100 \choose 6} \approx 0.68$
+1. $P(36\mathbb{N}\mathbb{N}) = 0.01$ Note $\mathbb{N}$ stands for any natural number. Computation, numerator is number of pins starting with 36 out of four and denominator is # of all pins. For numerator, think of it as four available slots with first two slots taken thereby last two slots have 10 possible numbers, pins can have multiple similar digits. This means $10^2 = 100$. For denominator, for all four slots, there are 10 possible numbers therefore we have $10^4 = 10000$. Dividing these two numbers gives us a 1% chance that safe starts with 36 digits.  
+1. Hellen has 6 letters of which 4 are similar, therefore there are $6!/4! = 30$ ways of of rearranging this word. 
+
+### Conditional Probability and Independence
+
+#### Conditional Probability
+
+Suppose we were given this (empirical) data
+
+```{r}
+mat3 <- matrix(c(32, 50, 82, 40, 11, 51, 72, 61, 133), byrow = TRUE, ncol = 3, dimnames = list(c("Female", "Male", "Total"), hair_color = c("Blue", "Chocolate", "Total")))
+mat3
+```
+
+Probability of being Female is 82/133 $\approx$ `r round(82/133, 2)`, probability of being male is 51/133 $\approx$ `r round(51/133, 2)`, probability of having blue hair color is $\approx$ `r round(72/133, 2)`, and probability of having chocolate hair color is $\approx$ `r round(61/133, 2)`.
+
+What if we wanted probability of blue haired people as long as they were female, that is, we are interested with blue haired people if and only if they were female. This would mean we look at only female population comprising of 82 people and not entire population of 133. In this regard we are taking probability with condition that it must be from a given sample. So for probability of blue haired people given they are female probability is computed as 32/82 $\approx$ `r round(32/82, 2)` or `r paste0(round(32/82, 2)*100, "%")`.
+
+Generally, given event A and B, we denote probability of event A given B as $\mathbb{P}(\text{A|B})$. And we can compute this as:
+
+$$\mathbb{P}(\text{A|B}) = \frac{\mathbb{P}(A\cap B)}{\mathbb{P}(\text{B})}$$
+
+From [set theory](#), we know $\mathbb{P}(A \cap B)$ is where A and B intersect which in this case we mean outcomes shared by A and B.
+
+If we can go through our example of hair color, $\mathbb{P}(\text{A|B}) = \mathbb{P}(\text{Blue|Female})$. $\mathbb{P}(\text{A} \cap \text{B}) = \mathbb{P}(\text{Blue} \cap \text{Female}) \approx 0.24$ which means people who are blue haired and Female. $\mathbb{P}(B) = \mathbb{P}(\text{Female}) \approx 0.62$.
+
+$$\therefore \mathbb{P}(\text{Blue|Female}) \approx \frac{0.24}{0.62} \approx 0.39$$
+
+
+<u>Exercises</u>
+
+Use this data on college admission to a certain department to answer question listed below
+
+```{r}
+adm <- as.vector(UCBAdmissions[,,1])
+r <- c(adm[1] + adm[3], adm[2] + adm[4])
+c <- c(adm[1] + adm[2], adm[3] + adm[4])
+dat <- c(adm[1:2], c[1], adm[3:4], c[2], r, 933)
+adm <- matrix(dat, ncol = 3, dimnames = list(Admit = c("Admitted", "Rejected", "Total"), Gender = c("Male", "Female", "Total")))
+adm
+```
+
+1. From those admitted, what is probability of females $P(Female|Admitted)$
+1. From those admitted, what is probability of males $P(Male|Admitted)$
+1. From female student, what is probability of those admitted $P(Admitted|Female)$
+1. From males, what is probability of those admitted $P(Admitted|Male)$
+
+<u>Solutions</u>
+
+1. $P(Female|Admitted) = 89/601 \approx$ `r round(89/601, 3)`
+1. $P(Male|Admitted) = 512/601 \approx$ `r round(512/601, 3)`
+1. $P(Admitted|Female) = 89/108 \approx$ `r round(89/108, 3)`
+1. $P(Admitted|Male) = 512/ 825 \approx$ `r round(512/825, 3)`
+
+#### Chain (Product) Rule
+
+Chain rule also referred to as product rule computes probability of an event that is part of a chain of event; what we would consider as intersection of events. For example in a two dice throw, we could compute probability of getting a total that is greater than 2, is an even number and it's second dice is a 4. In this case we have three events, that of a total that is greater than 2 but only if it is even and only if it's second dice is a 4. 
+
+Since in this case our interest is in probability of intersection, we can formulate a formula by making probability of intersection subject of our conditional probability.
+
+
+$$\therefore \mathbb{P}(\text{A|B}) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)} \quad{}\text{ becomes }\quad{} \mathbb{P}(A \cap B) = \mathbb{P}(\text{A})\mathbb{P}(\text{B|A})$$
+
+This means to compute probability of intersect of two events, we take product of initial event (that which must happen before second event occurs) and probability of second event given initial event has happened. 
+In this line of reasoning, we can determine probability of any chain of events (> 2), by taking a product of probability of initial event, and conditional probability of it's subsequent events until last event in that chain.
+
+Theoretically, if we had a chain of events $j_1, j_2, ...., j_n$, then it's probability is computed as
+
+$$\mathbb{P}(j_1j_2....j_n) = \mathbb{P}(j_1)\mathbb{P}(j_2|j_1)\mathbb{P}(j_3|j_1j2)\mathbb{P}(j4|j_1j_2j_3)....\mathbb{P}(j_n|j_1....j_{n_{-1}})$$
+
+Note, $\mathbb{P}(j_1j_2.....j_n)$ is actually probability of intersection of events $j_1, j_2, ...., j_n$. 
+
+As an example let us solve probability of getting a total that is greater than 2, even and it's second dice is a four. Let is denote this event as "E" and it's chain of events as:
+
+$e_1 $ total > 2
+$e_2 $ total is even
+$e_3 $ second dice is a 4
+
+These events are shown in following plot where e1 is in chocolate color, e2 is shaded diagonally  and e3 is in light blue color.
+
+```{r}
+op <- par("mar", "mai")
+par(mar = c(0,0,0,0), mai = c(0,0,0,0))
+
+plot(c(1.5, 9.5), c(-0.5, 8), type = "n", ann = FALSE, axes = FALSE)
+rect(3, 0, 4, 5,  col = "chocolate")
+rect(4, 0, 9, 6, col = "chocolate") # e1 > 2
+rect(6, 0, 7, 6, col = "lightblue")
+rect(c(3:5, 3:7, 4:8, 6:8, 8), c(3:5, 1:5, 0:4, 0:2, 0), c(4:6, 4:8, 5:9, 7:9, 9), c(4:6, 2:6, 1:5, 1:3, 1), density = 10) # e2 tot is even
+
+segments(2:9, 0, 2:9, 7)
+segments(2, 0:7, 9, 0:7)
+text(3.5:8.5, 6.5, 1:6, font = 2)
+text(2.5, 5.5:0.5, 1:6, font = 2)
+text(3.5:8.5, 5.5, 2:7)
+text(3.5:8.5, 4.5, 3:8)
+text(3.5:8.5, 3.5, 4:9)
+text(3.5:8.5, 2.5, 5:10)
+text(3.5:8.5, 1.5, 6:11)
+text(3.5:8.5, 0.5, 7:12)
+
+par(mar = op$mar, mai = op$mai)
+```
+
+Based on our chain rule, probability of this event is given by:
+
+$$\mathbb{P}(E) = \mathbb{P}(e_1)\mathbb{P}(e_2|e_1)\mathbb{P}(e_3|e_1e_2)$$
+
+Probability of getting a total greater than 2 $\mathbb{P}(e_1)$ is 35/36 = `r e1 <- 35/36; e1`
+
+Probability of $e_2$ which is probability of an even total given it is greater than 2 is computed as:
+
+$$\mathbb{P}(e_2|e_1) = \frac{\mathbb{P}(e_1 \cap e_2)}{\mathbb{P}(e_1)} = \frac{17/36}{35/36} = \frac{17}{35} = 0.4857143$$
+
+Probability of second dice being a 4 given totals of dice one and two are even and greater than two is given by:
+
+$$\mathbb{P}(e_3|e_1e_2) = \frac{\mathbb{P}(e_1 \cap e_2 \cap e_3)}{\mathbb{P}(e_1 \cap e_2)} = \frac{3/36}{17/36} = \frac{3}{17} = 0.1764706$$
+
+Taking a product of these probabilities we get
+
+$$\mathbb{P}(E) = 0.97222222 * 0.4857143 * 0.1764706 = 0.0833333$$
+
+Therefore there is about 8.3% probability of getting a total that is greater than 2, even and has a 4 on second dice.
+
+<u>Exercises</u>
+
+
+```{r}
+dat <- c(35, 1329, 1364, 17, 109, 126, 52, 1438, 1490, 29, 338, 367, 28, 316, 344, 57, 654, 711)
+titn <- array(dat, dim = c(3, 3, 2), dimnames = list(c("Child", "Adult", "Total"), c("Male", "Female", "Total"), Survival = c("No", "Yes")))
+```
+
+Let:
+
+- A be event person is Female 
+- B be event person is an adult
+- C be event a person did not survive; Survival = No
+
+Compute these probability of a person not surviving given they are female adults $\mathbb{P}(A,B,C)$. 
+
+Try to compute other similar probabilities.
+
+```{r}
+tot  <- 1490 + 711
+pa   <- (126+344)/tot
+pba  <- ((109+316)/tot)/((1438+654)/tot)
+pcba <- (109/tot)/((109+316)/tot)
+```
+
+
+<u>Solutions</u>
+
+$$\mathbb{P}(A,B,C) = \mathbb{P}(A)\mathbb{P}(B|A)\mathbb{P}(C|A \cap B) $$
+
+$$\mathbb{P}(A) = (126+344)/(1490+711) \approx 0.21 $$
+
+$$\mathbb{P}(A|B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)} = \frac{(109+316)/(1490+711)}{(1438+654)/(1490+711)} \approx 0.2$$
+
+$$\mathbb{P}(C|AB) = \frac{\mathbb{P}(A \cap B \cap C)}{\mathbb{P}(B \cap A)} = \frac{109/(1490+711)}{(109+316)/(1490+711)} = 0.26$$
+
+$$\therefore \mathbb{P}(ABC) = 0.21*0.2*0.26 \approx 0.0111$$
+
+#### Total Probability and Baye's Rule
+
+If we have an event whose probability we do not know but this event is composed of different parts, then we can compute it's probability from adding all probabilities of it's intersecting parts.
+
+For example, if we want to compute probability of obesity from probabilities of different obesity levels given to health status of four job groups, then we would need to add probabilities of intersecting levels. So given job groups $j_1$, $j_2$, $j_3$ and $j_4$ with health status as 0.2, 0.12, 0.43 and 0.25. We can compute probability of obesity from adding probabilities of obesity attached to each of these job levels or simply intersection of these health status by job levels and obesity. Symbolically this can be show as: 
+
+$$\mathbb{P}(O) = \sum_{i = 1}^n \mathbb{P}(O \cap j_i)$$
+
+If we are not given probabilities of these intersection, then from conditional probabilities we know $\mathbb{P}(A \cap B) = \mathbb{P}(A|B)\mathbb{B}$.
+
+$$\therefore \mathbb{P}(O) = \sum_{i=0}^{n} \mathbb{P}(O|j_i)\mathbb{P}(j_i)$$
+
+This is what is referred to as **total probability** where $\mathbb{P}(O|j_i)$ is a conditional probability of being obese given that they are from job level i.
+
+To complete this example, supposed we are given these conditional probabilities $\mathbb{P}(o_1|j_1) = 0.32$, $\mathbb{P}(o_2|j_2) = 0.28$, $\mathbb{P}(o_3|j_3) = 0.25$ and $\mathbb{P}(0_4|j_4) = 0.15$. Then we can compute probability of obesity as:
+
+```{r}
+po <- (0.32*0.2)+(0.28*0.12)+(0.25*0.43)+(0.15*0.25)
+```
+
+
+$$\mathbb{P}(O) = 0.32*0.2 + 0.28*0.12 + 0.25*0.43 + 0.15*0.25 = 0.2426$$
+
+#### Baye's Theorem
+
+If we know certain information about an event, then we would need to compute probability of that event in reference to that information. For example, if we know population of a given area are predisposed to a certain exposure, then we would need to compute probability of morbidity in reference to given exposure. Computing such kind of probabilities is done with Baye's theorem.
+
+If we can revisit our obesity and health status by job level example, we are given probabilities of health status by job level, we are also given conditional probabilities of being obese given a certain job level. Suppose we picked an obese person what is probability they were from a certain job level. To answer this would require us to use Baye's theorem which is simply an algebraic transformation of conditional and total probability.
+
+Let us go step-by-step to reason out Baye's theorem's formula.
+
+Recall our conditional probability
+
+$$\mathbb{P}(A|B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)}$$
+
+which we can re-express as 
+
+$$\mathbb{P}(A \cap B) = \mathbb{P}(A|B)\mathbb{P}(B)$$
+
+making intersection of these two events subject of this formula
+
+If we are interested in $\mathbb{P}(B|A)$ instead of $\mathbb{P}(A|B)$, then conditional probability is given by
+
+$$\mathbb{P}(B|A) = \frac{\mathbb{P}(B \cap A)}{\mathbb{P}(A)}$$
+
+and making probability of intersection subject of this formula we get
+
+$$\mathbb{P}(B \cap A) = \mathbb{P}(B|A)\mathbb{P}(A)$$
+
+Since
+
+$$\mathbb{P}(A \cap B) = \mathbb{P}(B \cap A)$$
+
+
+Then probability of A and B or intersection of A and B can be given by $\mathbb{P}(A|B)\mathbb{P}(B)$ or $\mathbb{P}(B|A)\mathbb{P}(A)$. We can express this algebraically as:
+
+$$\mathbb{P}(A|B)\mathbb{P}(B) \quad{}= \quad{} \mathbb{P}(A \cap B) \quad{}= \quad{} \mathbb{P}(B|A)\mathbb{P}(A)$$
+
+$$\therefore \mathbb{P}(A|B)\mathbb{P}(B) = \mathbb{P}(B|A)\mathbb{P}(A)$$
+
+From this expression we get baye's theorem as:
+
+$$\mathbb{P}(A|B) = \frac{\mathbb{P}(B|A)\mathbb{P}(A)}{\mathbb{P}(B)} \qquad{} \mathbb{P}(B) \ne 0$$
+
+If $\mathbb{P}(B)$ is not known, then total probability can be used to compute it.
+
+Using this theorem, let us compute probability of picking an obese person given they are from job level 2, that is $\mathbb{P}(j_2|O)$
+
+
+$$\mathbb{P}(j_2|O) = \frac{\mathbb{P}(O|j_2)\mathbb{P}(j_2)}{\mathbb{P}(O)} = \frac{0.28*0.12}{0.2426} = 0.1384996$$
+
+We conclude by noting there is about 13.8% of selecting an obese given they were from job level 2.
+
+As an added example, suppose we are given following table of conditional probabilities from data containing sex and smoking habits of patrons to a restaurant. Specifically what we have are conditional probabilities of a patron being a smoker given they are Female or Male. 
+
+```{r}
+t <- matrix(c(54, 60, 114, 33, 97, 130, 87, 157, 244), nrow = 3, dimnames = list(c("Female", "Male", "Total"), c("No", "Yes", "Total")))
+t_union <- prop.table(t[1:2, 1:2])
+(pSmokergivenSex <- prop.table(t[1:2, 1:2], 1))
+pSexgivenSmoker <- prop.table(t[1:2, 1:2], 2)
+```
+
+From this table $\mathbb{P}(Non-smoker|Female) \approx 0.62$, $\mathbb{P}(Non-smoker|Male) \approx 0.38$, $\mathbb{P}(Smoker|Female) \approx 0.38$ and $\mathbb{P}(Smoker|Male) \approx 0.62$.
+
+We are also given probabilities of being Female or Male as
+
+```{r}
+pForM <- t[1:2, 3]/t[3, 3]
+pForM
+pSmoker <- as.vector(pSmokergivenSex[1,2]*pForM[1]+pSmokergivenSex[2,2]*pForM[2])
+```
+
+Based on this information, we want to get probability that an incoming Female patron would be a non-smoker, that is $\mathbb{P}(Female|Smoker)$. Using Baye's theorem we can compute this as:
+
+$$\mathbb{P}(Female|Smoker) = \frac{\mathbb{P}(Smoker|Female)\mathbb{P}(Female)}{\mathbb{P}(Smoker)}$$
+
+We have input for our numerator but we need to compute $\mathbb{P}(Smoker)$ using total probability rule. 
+
+$$\mathbb{P}(Smoker) = \mathbb{P}(Smoker|Female)\mathbb{P}(Female) + \mathbb{P}(Smoker|Male)\mathbb{P}(Male) \approx 0.38*0.36 + 0.61*0.64 = 0.53$$
+
+$$\mathbb{P}(Female|Smoker) \approx \frac{0.38*0.36}{0.53} \approx 0.25$$
+
+We conclude by noting there is about 25% chance of subsequent Female patron to be smoker.
+
+<u>Exercise</u>
+
+From conditional probabilities given, compute these probabilities
+
+1. $\mathbb{P}(Male|Smoker)$
+1. $\mathbb{P}(Female|Non-smoker)$
+1. $\mathbb{P}(Male|Non-smoker)$
+
+<u>Solutions</u>
+
+1. $\mathbb{P}(Male|Smoke) \approx$ `r round(pSexgivenSmoker[2,2], 2)`
+1. $\mathbb{P}(Female|Non-smoker) \approx$ `r round(pSexgivenSmoker[1,1], 2)`
+1. $\mathbb{P}(Male|Non-smoker) \approx$ `r round(pSexgivenSmoker[2,1], 2)`
+
+
+### Independence
+
+Previous section we dealt with situations where probability of a given event is influence by another event. In this section we look at situations where occurrence of an event has no influence on a subsequent event. An example is a coin toss, however many times a coin is tossed, probability of each outcome (head and tail) for each toss remains constant; getting a head or a tail in one toss does not affect subsequent toss. 
+
+Generally, we note that two events are independent of each other if occurrence of one does not affect probability of other. For events A and B, if occurrence of B does not affect occurrence of B, then
+
+$$\mathbb{P}(A|B) = \mathbb{P}(A)$$
+
+and from conditional probability we know
+
+$$\mathbb{P}(A \cap B) = \mathbb{P}(A|B)\mathbb{P}(B)$$
+
+since $\mathbb{P}(A|B) = \mathbb{P}(A)$, then
+
+$$\mathbb{P}(A \cap B) = \mathbb{P}(A)\mathbb{P}(B)$$
+
+This is probability of independence between two events, that is, when two events are mutually independent, then probability of their union is similar to product of their probabilities. Similar expression can be noted when there are more than two events. For event $e_1$ through to $e_n$, their probability is given by
+
+$$\mathbb{P}(e_1 \cap e_2 \cap....e_n) = \mathbb{P}(e_1)\mathbb{P}(e_2)....\mathbb{P}(e_n)$$
+
+<u>Example</u>
+
+Given below data, we want to determine if sex is independent of statistical competence.  
+
+```{r}
+comp <- c(0.17, 0.22, 0.39, 0.26, 0.35, 0.61, 0.43, 0.57, 1.00)
+c_mat <- matrix(comp, nrow = 3, dimnames = list(Sex = c("Female", "Male", "Total"), Competence = c("No", "Yes", "Total")))
+c_mat
+```
+
+Independence is only confirmed if all unions are equivalent to product of their events. That is:
+
+$\mathbb{P}(Female \cap No) = \mathbb{P}(Female)\mathbb{P}(No)$
+$\mathbb{P}(Male   \cap No) = \mathbb{P}(Male ) \mathbb{P}(No)$
+$\mathbb{P}(Female \cap Yes) = \mathbb{P}(Female)\mathbb{P}(Yes)$
+$\mathbb{P}(Male   \cap Yes) = \mathbb{P}(Male ) \mathbb{P}(Yes)$
+
+Since this holds
+
+$0.17 = 0.43*0.39$
+$0.22 = 0.57*0.39$
+$0.26 = 0.43*0.61$
+$0.35 = 0.57*0.61$
+
+Then we can conclude sex and statistical competence are independent events.
+
+<u>Exercise</u>
+
+1. Given this data, determine if sex and smoking habits are dependent or independent of each other
+
+```{r}
+probs <- round(c(t[1:2]/244, 114/244, t[4:5]/244, 130/244, t[7:8]/244, 244/244), 2)
+matrix(probs, ncol = 3, dimnames = dimnames(t))
+```
+
+
+<u>Solutions</u>
+
+1. Based on given data sex and smoking habits are dependent on each other since $0.22 \ne 0.36*0.47$, $0.25 \ne 0.64*0.47$, $0.14 \ne 0.36*0.53$ and $0.40 \ne 0.64*0.53$
+
+#### Binomial distribution
+
+For an event with two independent possible outcomes, we can compute probability of an event (like number of successes) after repeated measures using what is referred to as a binomial distribution. Let us use an example to reason through binomial distribution. 
+
+Suppose we tossed a coin 10 times and we wanted to get probability of a consecutive number of heads and tails, then we would be seeking probability of their intersection. Since these are independent event, then probability is simply a product of probabilities of each of these events. Therefore, for a coin with 0.6 chance of being a head and 0.4 chance of being a tail, we can compute probability of getting consecutive 5 heads and then five tails (h, h, h, h, h, t, t, t, t, t) as:
+
+$$\mathbb{P}({h,h,h,h,h,t,t,t,t,t}) = \mathbb{P}(h)\mathbb{P}(h)\mathbb{P}(h)\mathbb{P}(h)\mathbb{P}(h)\mathbb{P}(t)\mathbb{P}(t)\mathbb{P}(t)\mathbb{P}(t)\mathbb{P}(t)$$
+
+which is$0.6*0.6*0.6*0.6*0.6*0.4*0.4*0.4*0.4*0.4=0.6^6*0.4^5=$ `r 0.6^5*0.4^5` a very unlikely outcome. Note, there is only one way we can get a consecutive 5 head and 5 tails in a 10 toss of a coin.
+
+Now, suppose we wanted 5 head from these 10 tosses but are not specific on which toss produced a head, then we would have a number of possible outcomes. This is because there are $10 \choose 5 =$ `r choose(10, 5)` possible ways of getting a 5 heads in 10 tosses (refer to section on [counting](#counting) to know how this was computed). With so many possible outcomes, then probability of this event (getting 5 heads in ten coin tosses) should increase, and indeed it does since multiplying all these possible values with probability of getting 5 heads and 5 tails gives is:
+
+$$\mathbb{P}(5 \text{heads in 10 tosses}) = {10\choose5}\mathbb{P}(h)^5\mathbb{P}(t)^5 = {10\choose5}0.6^5*0.4^5 \approx 0.2$$
+
+Generalizing our computation for $n$ number of trials and $k$ number outcomes for which we will refer to as "successes" (success can be a head or tail, yes or no), then probability of getting $k$ outcomes from event $E$ in $n$ trials and denoted as $E_k$ is given as:
+
+$$\mathbb{P}(E_k) = {n\choose k}P^k(1-P)^{n-k} \qquad{} k = 0....n$$
+
+Where $P$ is probability of outcome $E$ or success and is between 0 and 1 (exclusive of 0 and 1). $P$ is also constant in each trial as each trial is independent. 
+
+This is what is known as binomial distribution.
+
+#### Geometric Law
+
+Another interesting application of independence probability for events with binary outcomes (True/False, Yes/No, Head/Tail) is getting probability initial occurrence of an outcome. 
+
+Using our coin toss example, we could be interested in probability of initial tail. In this case tail is our "success" and we would be multiplying all failures (heads) until success (tail) is reached. So if we had tail in our fifth toss, then we would be multiplying probabilities of all heads (four of them) with probability of a tail. Maintaining our earlier probabilities (heads = 0.6, tails = 0.4) we compute probability of this event $T$ occurring at 5th toss as:
+
+$$\mathbb{P}(T_5) = 0.6*0.6*0.6*0.6*0.4 = 0.6^{5-1}*0.4 = 0.05184$$
+
+As we did before we can generalize this as:
+
+$$\mathbb{P}(T_k) = (1-P)^{k-1}P$$
+
+where $k$ is when event occurs and $P$ is probability of that event.
+
+### Random Variables
+
+A random variable is a **function** for assigning numerical quantities to outcomes of a probability experiment. Random variables are denoted with capital letters such as $X, Y, Z$. As functions, random variables are especially handy in formulating models where complete sample space is unknown or is not relevant (interested in a few outcomes). 
+
+As an example, let us begin with a known sample space like two dice throws. We know sample space consists of 36 possible outcomes, that is $S =$ {(1,1), ...., (6,6)}. We can formulate a random variables which:
+
+- outputs totals of these dice 
+- determines and assigns different values for even or odd totals
+- Assigns different values initial and second dice
+- Outputs product of dice
+
+From this example, we can note that there are numerous random variables which can be formulated for a given sample space. Symbolically, we can define a random variable $X$ which assigns 1 for even totals and 0 for odd totals as:
+
+$$
+X(h,j) = 
+ \begin {dcases*}
+  1 & when $h+j$ is even\\
+  0 & when $h+j$ is odd
+ \end{dcases*}
+$$
+
+where $h$ and $j$ are dice values from two throws.
+
+Output of random variables are set of real numbers $\mathbb{R}$. Domain of these functions are sets of possible outcomes like above 36 outcomes
+
+<u>Exercises</u>
+
+Formulate a random variable that:
+
+1. Outputs products of two dice
+1. That indicates totals of two dice throws are greater than 2  
+
+<u>Solutions</u>
+
+1. $X(h,j) = h*j$
+1. $X(h,j) = (h+j) > 2$
+
+
+### Discrete and Countinuous variables
+
+
+#### Discrete Random variables
+
+Discrete random variables can take on only finite and infinite **countable** sample space. Countable in mathematics means number of outcomes (cardinality) in a sample space is a subset of [natural numbers](#link A1) (positive integers) and that each outcome can be counted and associated to a natural number.
+
+Finite countable outcomes means number of outcomes in a sample space is known like that of a coin toss which has 2 outcomes. Infinite countable sample space has unknown number of outcomes but every outcome can be associated to a unique natural number for instance number of calls to a calling center are unknown but each call can be referenced by a natural number like call 1 and call 2.      
+
+
+#### Continuous Random Variables
+
+Continuous random variables take an infinite number of outcomes from an interval which can be defined as an inequality like $0 \leqslant x \leqslant n$ or interval notation "[]" and "()".
+
+These intervals can be open or closed and it could be bounded or unbounded. 
+
+Closed interval means interval is only within given values, it is denoted with "[" if left is closed and "]" if right is closed. Example, [1, 10] means interval is from 1 through 10. 
+
+Open intervals means interval is continuing indefinitely on given side. Example, [1, 10) means interval starts at 1 and continues indefinitely to right. 
+
+Bounded intervals have endpoints which are [real numbers](#link to A1) $\mathbb{R}$, quantities along a number line for example like (-$\pi$, $\pi$]. 
+
+Unbounded intervals have endpoints which are not $\mathbb{R}$ numbers such as imaginary numbers like $6i$.
+
+Examples of continuous random variables are:
+
+- Height of adults in a given population and a random variable $X$ giving a range for females as from 2ft 4.8 in to 5ft 3.2 in. Selecting any female within this population would give us a value within this interval. In this case we can consider this to be a closed interval as we do not expect any female to be shorter or taller than given interval. We also would be having a bounded interval as endpoints are real numbers. 
+- Body temperature which ranges from $97^\circ$F to $99^\circ$F and a random variable $X$ which determines lower and higher temperature as possible "patients". In this case sample sample space and interval would from lowest body temperature any human being can have and any high temperature any human being can get to. Outcomes meeting variable $X$ would be body temperature below $97^\circ$F and above $99^\circ$F, hence they would have this inequality $x < 97^\circ\text{F } \text{ or } x > 99^\circ\text{F}$F. Note this is continuous as body temperature can assume any value within given interval.   
+
+
+<u>Exercises</u>
+
+In each one of these experiments, indicate if random variable $Y$ is discrete or continuous, if discrete, add if they are finite or infinite
+
+1. Number of participants in a workshop and random variable $Y$ is those participants with statistical knowledge at beginning of workshop
+1. Jog next to a animal park and random variable $Y$ is number of wildlife seen along jogging track  
+1. A race in an athletics championship and random variable $Y$ is number of athletes who complete a race between 1 and 2 hours
+1. A race in an athletics championship. Random variable $Y$ is average time taken by athletes to complete a 1 to 2 hour race.
+
+<u>Solutions</u>
+
+1. Discrete and finite; S = all participants for which total number known and it is a natural number. Also, each participant (outcome) can be enumerated with a natural number
+1. Discrete and infinite: S = all wildlife in animal park, $S$ might be known or unknown but number seen during jog would be unknown but outcomes which are wildlife would be countable like 10 warthogs 
+1. Discrete and finite; S = all athletes in race. Number of $S$ is known and each athlete countable with a positive integer
+1. Continuous as time is measured on an infinite uncountable interval
+
+
+**Guiding remarks:** in distinguishing between finite and infinite countable outcomes; most infinite countable outcomes are from random experiments which are continuous in nature though their outcome can be counted using a natural number. In distinguishing between infinite countable outcomes and outcomes from a continuous random variable look at their outcomes, if outcomes can be counted with positive real numbers like 1:5, then they are not from a continuous random variable. 
+
+### Introduction to Probability Distributions
+
+All probabilities of a random variable are referred to as **probability distribution** of that variable. Probability distributions are therefore probabilities of occurrence of different possible outcomes and can be represented by a formula, a table or a graph.
+
+For example, in a two coin toss S = {hh, th, ht, tt}, and a random variable $Y$ which counts number of heads in each outcome outputs real numbers 2, 1, and 0. Probability distribution for this random variable is therefore $\mathbb{P}(x = 0) = 1/4 = 0.25$, $\mathbb{P}(x = 1) = 2/4 = 0.5$, and $\mathbb{P}(x = 2) = 1/4 = 0.25$.
+
+Probability distributions are distinguished between discrete and continuous random variables. For discrete random variables probability distribution is given by **Probability Mass Function (pmf)** while probability distribution for a continuous random variable is given by **Probability Density Function(PDF)**. 
+
+#### Probability Mass Function (p.m.f)
+
+In very basic terms probability mass function is a <u>function</u> used to assign probabilities to outcomes of a discrete random variable. For example a probability mass function $f(x)$ can assigns probability $\mathbb{P}$ to a discrete random variable $X$ such that $X=x$, that is $f(x) = \mathbb{P}(X=x)$.
+
+Probability mass function must meet two conditions:
+
+1. $f(x) > 0$ this means probability of all outcomes must be positive non-zero numbers. 
+1. $\sum_x f(x) = 1$; this means probabilities of all outcomes must total to 1
+
+**Example 1**
+
+Let us revisit our example of a two coin toss. For this random variable ($X = heads$), we want to formulate a function which outputs these terms of a sequence 0.25, 0.50 and 0.5 given x = 0, 1, and 2. In appendix 1 there is a section on sequences and particularly formulating sequences which are functions, it might be wise to have look at that section as this example will follow that process.  
+
+To start, these were our probabilities
+
+$$\mathbb{P}(x=0)=\frac{1}{4}, \quad{} \mathbb{P}(x=1) = \frac{2}{4}, \quad{} \mathbb{P}(x=2)=\frac{1}{4}$$
+
+Now let us look for patterns. Initial notable aspect of these terms is that their denominator is a constant 4. So we know our function will have a denominator of 4.
+
+For our numerator, we have 1, 2, 1 which are basically binomial coefficients of $n = \text{max}(x)$ and $k = x$, that is
+
+$${2 \choose 0} =1, \quad{} {2 \choose 1} = 2, \quad{} {2 \choose 2} = 2$$
+
+Therefore, denoting our function as $f(x)$, we can define it as
+
+$$f(x) = \frac{{2 \choose x}}{4}, \qquad{} x = 0, 1, 2 $$
+
+This now is *our probability mass function* for discrete random variable $X$ which counts number of heads in a two coin toss.
+
+
+##### Cummulative Probability Function for Discrete Random Variables
+
+These are functions which give cumulative probabilities of outcomes up to a given value. For example, in our two coin toss experiment, cumulative probabilities which we denote as $F(x)$ at $x = 0, 1, \text{ and }2$ is given by:
+
+$$F(1) = f(0) = \frac{1}{4}$$
+
+$$F(2) = f(1) = \frac{1}{4}+\frac{2}{4} = \frac{3}{4}$$
+
+$$F(2) = f(2) = \frac{1}{4}+\frac{2}{4}+\frac{1}{4}=\frac{4}{4} =1 $$
+
+Now we need to formulate a function which accepts any real number of $x$. When we indicate any real number we mean from $-\infty$ to $\infty$. Since we have three cumulative probability values, then we will partition our possible values such that we have four intervals. we want our function to give a cumulative probability of 0 if $x \leqslant 0$, $\frac{1}{4}$ if $x$ is between 0 and 1 (excluding both numbers), $\frac{3}{4}$ if $x$ is between 1 and 2 (2 is excluded), and 1 if $x \geqslant 2$. From elementary functions noted in appendix 1, a function which can be defined with different rules for different domain is a **Piecewise-defined function**.
+
+Therefore we can define our cumulative probability function as:
+
+$$
+F(x) =
+  \begin{cases}
+    0 & \text{for } x < 0\\\\
+    \frac{1}{4} & \text{for } 0 \leqslant x < 1\\\\
+    \frac{3}{4} & \text{for } 1 \leqslant x < 2\\\\
+    1           & \text{for } x \geqslant 2 
+  \end{cases}
+$$
+
+Do take note of two conditions for which a cumulative distribution function (CDF) should meet, these:
+
+1. CDF must be between 0 and 1 since it is a probability
+1. Function should accept $x$ values $-\infty$ to $\infty$ with $F(-\infty) = 0$ and $F(\infty)=1$
+1. If $a < b$, then $F(a) \leqslant F(b)$ for any real numbers $a$ and $b$
+
+CDF is not often used when random variable is discrete as much as it is used in continuous functions, but it is equally good to know.
+
+
+#### Probability Density Function
+
+Let us begin this section by defining probability of an outcome from a continuous random variable using computations used earlier. 
+
+Suppose we are told it takes a jogger a couple of hours to complete a 10km jogging track. Question now is, can we compute probability that our jogger would have completed jogging at exactly 5 hours. Note this is a continuous random variable as time is continuous and sample space (time) is continuous and therefore has uncountable and infinite number of possible outcomes. Going by our definition of probability, computing probability of this event $T$ at exactly 5 hours means dividing 5 hours by an infinite sample space (time)
+
+$$\mathbb{P}(T = 5) = \frac{5}{\infty} = 0$$
+
+From this example, we should take it that probability of an event being an exact value would always be 0. For this reason computation of probability for a continuous random variable needs a slightly different approach from that of a discrete random variable. 
+
+Probabilities of continuous random variables are computed by **probability density functions** which use calculus and more specifically integration over a given interval. Appendix 1 has a re-introduction section on calculus for which it might be pertinent to read (if need be). 
+
+Basic idea here is this, since we cannot compute probability for an exact value for a continuous random variable given its infinite and uncountable sample space, then we compute probability of a value from a given interval for example we can compute probability that our jogger would have completed jogging between five and six hours.
+
+Before we estimate probability of our jogger completing in given interval, let us mention properties of a probability density function or simply what is expected from that function for assigning probabilities to outcomes of a continuous random variable.
+
+<u>Properties of a probability density function</u>
+
+If $j(x)$ is a probability density function for a continuous random variable $X$, then:
+
+1. Assuming values of our continuous random variable are real numbers ranging  from $-\infty$ to $\infty$, probabilities produced by this function must be equal or greater than 0, that is; $j(x) \geqslant 0$ for all $y$ which are elements of ($\-infty, infty$)
+1. Integration over entire interval ($-infty, \infty$) or area under graph should be 1; $\int_{-\infty}^{\infty}j(x)\space{}dx = 1$
+1. Probability that $X$ is within interval [a, b] is given by
+
+$$P(a \leqslant X \leqslant b) = \int_a^b j(x)dx$$
+
+Resuming our jogger's example, suppose probability of completion can be modeled by this probability density function.
+
+$$j(x) =
+   \begin{cases}
+      \frac{x}{55} & \text{ if }\space{} 0 \leqslant x \leqslant 10\\\\
+      0 & \text{ otherwise}
+   \end{cases}$$
+
+
+We must begin by confirming initial two properties before we get probability of $X$ being in given interval [5, 6].
+
+Property 1 is met as all $j(x)$ are greater than or equal to 0
+
+```{r}
+jx <- function(x) {
+   ifelse(x >= 0 & x <= 10, x/50, 0)
+}
+jx(0:10)
+jx(0:10) >= 0
+```
+
+Property 2 is also met as area under graph is 1
+
+```{r}
+Jx <- function(x) {
+   x^2/100
+}
+Jx(10) - Jx(0)
+```
+
+Now we can compute probability that our jogger completes jogging between 5 and 6 hours which is area under this graph.
+
+```{r}
+x <- seq(0, 10, 0.0001)
+plot(x, jx(x), type = "l", col = "chocolate", xlab = "hours", ylab = "prob", xaxt = "n")
+axis(1, sort(c(seq(0, 10, 2), 5)))
+
+# Colouring
+rect(x[x >= 5 & x < 6], 0, x[x > 5 & x <= 6], jx(x[x >= 5 & x < 6]), border = "chocolate", col = "chocolate")
+
+# Lines 
+segments(c(5, 6), 0, c(5, 6), jx(c(5, 6)), col = "chocolate4", lwd = 2)
+lines(x, jx(x), col = "chocolate4", lwd = 2)
+```
+
+
+Computation-wise we use our final property, which means integrating from 5 kilometers to 6 kilometers.
+
+$$P(5 \leqslant X \leqslant 6) = \int_5^6 j(x)\space{} dx = \int_5^6 \frac{x}{55}\space{} dx$$
+
+```{r}
+#Jx(6);Jx(5)
+p56 <- Jx(6)-Jx(5)
+```
+
+From [basic calculus](#a1), integration between an interval can be done by getting difference of anti derivative of upper and lower limit.  
+
+$$\therefore P(5 \leqslant X \leqslant 6) = \frac{x^2}{100}|_5^6 = \frac{6^2}{100} - \frac{5^2}{100} = 0.11$$
+
+Therefore probability that our jogger will complete jogging a 10 kilometer track in 5 to 6 hours is about `r paste0(p56*100, "%")`. 
+
+
+##### Cumulative Distribution Function 
+
+For us to compute probability of a continuous random variable we had get an antiderivative of our probability function. This antiderivative function is actually a cumulative distribution function as it computes probabilities of outcomes up to a given point. For example for point $a$, antiderivative of it's probability function would be total probability from $-infty$ to a.
+
+In this regard, antiderivative of a probability distribution can be viewed as area under a graph of that probability distribution (derivative) from $\-infty$ to $x$. 
+
+Here are properties of a cumulative distribution function.
+
+For a probability distribution function $j$ with this cumulative distribution function:
+
+$$J(x) = \int_{-\infty}^x j(x)\space{} dx$$
+
+then,
+
+1. Derivative of cumulative function (which is actually an antiderivative) should be similar to probability distribution; $\J'(x) = j(x)$ wherever $j$ is continuous
+1. Cumulative distribution ranges from 0 to 1 (inclusive) for x between negative infinity to positive infinity; $\0 \leqslant F(x) \leqslant 1, \quad{} -\infty < x < \infty$
+1. Cumulative distribution is an increasing sequence of terms, that is $J(x)$ is non-decreasing on ($-\infty, \infty$)
+
+As an example, suppose we know our jogger has a 65% of completion, how many hour would our jogger have taken.
+
+To answer this, let us denote this time as $x$ and therefore probability of completion at time $x$ is given by:
+
+$$p(0 \leqslant X \leqslant x) = 0.65$$
+
+Given this equation, we now need to solve for $x$ and we begin by getting a cumulative distribution function $J(x)$.  
+
+$$J(x) = \int_0^x \frac{x^2}{100}\space{} dx = \frac{x^2}{100}|_0^x = J(x) - J(0)}$$
+
+Since $J(0) = 0$, then we can solve $x$ from
+
+$$\frac{x^2}{100} = 0.65$$
+
+Making $x$ subject of our equation we get
+
+```{r}
+x.65 <- sqrt(0.65*110) 
+```
+
+
+$\therefore x = \sqrt{0.65*100} \approx $ `r paste(round(x.65,1), "kilometers")`
+
+
+
+### Expected Value, Standard Deviation, and Median
+
+From chapter one, we used measures of central tendency and deviation to describe data. Similarly, we can use those concepts to describe random variables. Particularly, we shall describe random variables by their expected value which is really it's mean, and by their standard deviation and median. 
+
+We shall go through these concepts from a discrete and continuous point of view as they have subtle differences.
+
+#### Discrete Random Variable
+
+##### Expected value
+
+As noted in our introduction to this section, expectation of a random variable can be viewed as it's mean. From a discrete point, we can look at expectation of a random variable as that central point or average value we would expect.
+
+For example, for a four coin toss, $S =$ 
+
+```{r}
+s <- c(c(rep("H", 8), rep("T", 8)), rep(c(rep("H", 4), rep("T", 4)), 2), rep(c("H", "H", "T", "T"), 4), rep(c("H", "T"), 8))
+matrix(s, byrow = FALSE, ncol = 4, dimnames = list(1:16, paste0("Toss_", 1:4)))
+```
+
+Discrete random $Y$ counts number of heads such that it's outcome and probability mass function is given as:
+
+```{r}
+y <- c(1, 4, 6, 4, 1)
+matrix(c(y, round(y/16, 2)), byrow = TRUE, ncol = 5, dimnames = list(c("y", "Probs"), Outcomes = 0:4))
+```
+
+Expectation of $Y$ defined as:
+
+$$EY = \sum_x x\mathbb{P}(Y=y) = \sum_x xf(x)$$
+
+This basically means a total of each outcome multiplied by it's probability, that is:
+
+$$EY = Y_1\mathbb{P}(Y=0) + Y_2\mathbb{P}(Y=1) + Y_3\mathbb{P}(Y=2) + Y_4\mathbb{P}(Y=3) + Y_5\mathbb{P}(Y=4)$$
+
+$$\therefore EY = 0\frac{1}{16} + 1\frac{4}{16} + 2\frac{6}{16} + 3\frac{4}{16} + 4\frac{1}{16} = \frac{32}{16} = 2$$
+
+Interpretation, we expect about two heads from a four coin toss. This two is a center of mass when probabilities of outcomes are weighted.
+
+##### Variance and Standard Deviation
+
+From basic descriptive statistics variance is defined as average squared distance from mean. This holds for random variable with exception that we now take a weighted variance. 
+
+Therefore, we can compute variance for our example as:
+
+```{r}
+v <- (0-2)^2*(1/16) + (1-2)^2*(4/16) + (2-2)^2*(6/16) + (3-2)^2*(4/16) + (4-2)^2*(1/16)
+s <- sqrt(v)
+```
+
+
+$$V(x) = (0-2)^2 * \frac{1}{16} + (1-2)^2 \frac{4}{16} + (2-2)^2 \frac{6}{16} + (3-2)^2 \frac{4}{16} + (4-2)^2 \frac{1}{16} = 1$$
+
+
+Standard deviation is simply square root of variance
+
+$$\sigma = \sqrt{V(x)} = \sqrt{1} = 1$$
+
+#### Continuous Random Variable 
+
+##### Expected value 
+
+Expected value for continuous random functions is similar to expected value for discrete random variable as regards meaning, but differ as regards computation. Continuous random variables use integration.
+
+For a probability distribution function of a continuous random variable such as $j$, expected value of $X$ is given by:
+
+$$\mu = E(X) = \int_{-\infty}^{\infty} xj(x) \space{}dx$$
+
+This means $\mu$ of a continuous function is difference of antiderivative $x$ times pdf for infinity and -infinity.
+
+An example would clarify this, suppose we are given following probability density function, 
+
+$$j(x) = 
+   \begin{cases}
+   \frac{x}{50} & \text{if }\space{} 0 \leqslant x \leqslant 10\\\\
+   0         &      \text{otherwise}
+   \end{cases}$$
+
+
+From our $\mu$ equation we begin by multiplying probability density function by $x$ similar to what we did for discrete random variable.
+
+$$x*j(x) = x*\frac{x}{50} = \frac{x^2}{50}$$
+
+Now instead of adding these probabilities as we did with discrete probabilities, we get cumulative distribution (antiderivative) function and compute for our limits 10 and 0. That is;
+
+$$\mu = \int_{-\infty}^{\infty} xj(x)= \int_{0}^{10} x\frac{x}{50}\space{}dx = \int_{0}^{10}\frac{x^2}{50}= (\frac{x^3}{150})|_{0}^{10} $$
+
+Using this cumulative function we should get:
+
+```{r}
+JC <- function(x) {
+   x^3/150
+}
+e <- JC(10) - JC(0)
+```
+
+$\mu = E(X)= \frac{10^3}{150} - \frac{0^3}{150} \approx $ `r round(e, 1)`
+
+We can show this graphically as follows:
+
+```{r, cache=TRUE}
+w <- 0.001
+x <- seq(0, 10, w)
+plot(x, jx(x), type = "l", col = "chocolate4", lwd = 2)
+rect(x[-length(x)], 0, x[-1], jx(x[-length(x)]), border = "chocolate", col = "chocolate")
+segments(e, 0, e, jx(e), lwd = 2)
+text(e, jx(e)+0.4, labels = paste("E(X) =", round(e, 1)), srt = 45)
+```
+
+Notice, mean does not divide area under graph into two equal parts, it merely ascertains central tendency.   
+
+```{r}
+l <- sum(x[x < e]*w)
+r <- sum(x[x > e]*w)
+```
+
+For this example area to left of mean is `r l` while that of it's right hand side is `r r` difference being `r abs(r-l)`.
+
+##### Variance and Standard Deviation
+
+Variance for a continuous random variable has similar notion as that of a discrete random variable. It involves integrating  product of squared distance from mean and probabilities (pdf), that is:
+
+$$V(X) = \int_{-\infty}^{\infty} (x-\mu)^2j(x)\space{}dx$$
+
+From this equation we can compute variance for our earlier example as
+
+$$V(X) = \int_0^{10} (x - \frac{20}{3})^2(\frac{x}{50})\space{}dx$$
+
+$$=\int_0^{10} (x^2 - \frac{40x}{3} + \frac{400}{9})(\frac{x}{55})\space{} dx = (\frac{x^3}{55} - \frac{40x^2}{165} + \frac{400x}{495})\space{dx}$$
+
+```{r}
+var.fun <- function(x) {
+   (x^4/200) - ((4*x^3)/45) + ((4*x^2)/9)
+}
+v2 <- var.fun(10)
+s2 <- sqrt(v2)
+```
+
+That should lead us to this cumulative distribution function and variance
+
+
+$= (\frac{x^4}{200} - \frac{4x^3}{45} + \frac{4x^2}{9})|_0^{10} =$ `r v2`
+
+Standard deviation is simply square root of variance
+
+$\sigma = \sqrt{V(X)} = $ `r s2`
+
+
+##### Median
+
+For a continuous random variable, median is a value that divided area under graph of a probability density function into two. This means for a random variable $X$, median which we denote as $m$ would be
+
+$$P(X \leqslant m)=\frac{1}{2}$$
+
+Solving for $m$ gives us median.
+
+To do this we must begin by getting cumulative distribution function which we shall use to determine area under graph from $-\infty$ to $m$ and then solve for $m$.
+
+Using our probability density function $\frac{x}{50}$, we found it's cumulative distribution function as $\frac{x^2}{100}$ therefore
+
+$$J(x) \int_{-\infty}^{\infty} f(t)\space{}dt = \int_0^x \frac{x}{55}\space{}dt= \frac{x^2}{100}|_0^x = \frac{x^2}{100} -  \frac{0}{100} = \frac{x^2}{100}$$
+
+
+Now we can solve for $m$ in
+
+$$J(m) = P(X \leqslant m) = \frac{1}{2}$$
+
+$$\frac{m^2}{100} = \frac{1}{2}$$
+
+$$m^2 = \frac{1}{2}*100 $$
+
+$$m^2 = 50$$
+
+```{r}
+m <- sqrt(50)
+```
+
+$m = \sqrt{50} \approx $ `r round(m, 1)`
+
+
+
+```{r}
+w <- 0.001
+x <- seq(0, 10, w)
+plot(x, jx(x), type = "l", col = "chocolate4")
+rect(x[-length(x)], 0, x[-1], jx(x[-length(x)]), border = "chocolate", col = "chocolate")
+segments(c(e, m), 0, c(e, m), jx(c(e, m)), lwd = 2, col = 4:5)
+legend("topleft", legend = c(paste("E(X) =", round(e,1)), paste("Median =", round(m, 1)), paste("Sigma =", round(s2, 1))), lty = 1, lwd = 2, col = c(4:5, "white"))
+title("Mean and Median of a continuous R.V.")
+```
+
+Earlier we noted mean does not divide area under graph into two equal part, we now note median does divide area under a graph into two equal parts.
+
+
+```{r}
+lower <- sum(jx(x[x < m]) * w)
+upper <- sum(jx(x[x > m]) * w)
+lower; upper
+```
+
+From our example, left hand side of median is approximately `r lower` and right hand side is approximately `r upper` difference being `r lower-upper` which is very small difference attributable to estimation (rounding) errors. 
+
+### Discrete Distributions
+
+
+#### Bernoulli Distribution
+
+If a random variable has only two possible outcomes, then it is said to have a Bernoulli distribution. 
+
+These outcomes are referred to as **success** if it is an outcome of interest and **failure** if not.
+
+Probability of success is $p$ and that of failure is $1-p$, that is:
+
+$$\mathbb{P}(X=1) = p$$
+
+$$\mathbb{P}(X=0) = 1-p \quad{} \text{or} \quad{} 1-\mathbb{P}(X=1) $$
+
+This distribution is denoted as $X \sim Ber(p)$
+
+
+Though this distribution is quite simple, it models a number of aspects like a coin toss or statistical analysis involving binary outcomes for example yes/no, true/false, 0/1, male/female and so forth.
+
+
+#### Binomial Distribution
+
+Binomial distributions are used when a discrete random variable involves counting a number of outcomes in multiple experiments. For instance number of tails in a multiple coin toss or number of even totals in a two dice throw.
+
+Probability that an outcome is observed is $p$ and number of experiments is denoted by $n$.
+
+Binomial distribution is denoted by $X \sim Bin(n, p)$ and probability mass function given by:
+
+$$j(x) = \mathbb{P}(X=x)= {n \choose x}p^x(1-p)^{n-x}, \quad{} x = 0, 1, ....n $$
+
+Mean for this distribution is given by $np$ and variance is:
+
+$$Var(X) = np(1-p)$$
+
+**Example**
+
+Suppose a pharmacist is doing a quality control check for expired drugs in their store. If she knows there is a 2% probability of expired drugs from a lot of 100, what is probability that 4 would be expired.
+
+Here random variable $X$ is number of expired drugs and possible outcomes as {0, 1, 2, ...., 100}
+
+Using PMF for a binomial distribution we can compute this probability as:
+
+$$P(4) = ^{100}C_4 * 0.02^4(1-0.02)^{100-4} \approx 0.09$$
+
+#### Poisson Distribution
+
+For any given random variable $X$, when occurrence of one event does not  affect probability of a subsequent event, that is, events are independent of each other, and if there are $k$ number of times an event can occur in an interval, then $X$ is a Poisson random variable and can be modeled with Poisson probability distribution.
+
+A good example is that of multiple coin toss, each coin toss (event) is independent thus probability of getting a head or tail in one toss is not influenced by outcome of a previous coin toss. 
+
+Probability mass function for a Poisson random variable is given as:
+
+$$P(k \text{ events in interval}) = \frac{\lambda^k}{k!}e^{-\lambda} $$
+
+where 
+
+- $\lambda$ is average rate
+- $k$ are number of times an event can occur, it takes values 0, 1, 2, ....
+
+Poisson distribution is denoted as $X \sim Pos(\lambda)$
+
+Example
+
+Number of prospective students waiting to join an online course is said to be a Poisson random variable with an average of 45 students every hour. We are asked to compute probability of 10, 20 and 25 students waiting to join in a given hour.
+
+From this example, $\lambda$ is 45, therefore our PMF is given as
+
+$$P(k \text{ students waiting}) = \frac{45^k}{k!}e^{-45}$$
+
+
+```{r}
+psn <- function(k, lambda) {
+   (lambda^k/factorial(k))*exp(-lambda)
+}
+```
+
+$P(k = 10) = \frac{45^{10}}{10!}e^{-45} = $ `r psn(10, 45)`
+
+$P(k = 20) = \frac{45^{20}}{20!}e^{-45} = $ `r psn(20, 45)`
+
+$P(k = 25) = \frac{45^{25}}{25!}e^{-45} = $ `r psn(25, 45)`
+
+If we were asked for probability of less than 6 students, then we would need to compute a cumulative distribution of $X =$ 0, 1, 2, 3, 4, and 5. This means computing probability of each and and then adding them up:
+
+
+```{r}
+l5 <- psn(0, 45) + psn(1, 45) + psn(2, 45) + psn(3, 45) + psn(4, 45) + psn(5, 45)
+```
+
+$P(k < 6) = P(k = 0) + P(k = 1) + P(k=2) + P(k=3) + P(k=4) + P(k=5) =$ `r l5`
+
+<u>Exercise</u>
+
+If average of getting a head in a four coin toss is given as 2, what is probability of getting 
+
+1. 0 heads
+1. 1 head
+1. 2 heads
+1. 3 heads
+1. 4 heads
+1. Less than or equal to 4 heads
+
+<u>Solution</u>
+
+1. $P(k = 0) =$ `r psn(0, 2)`
+1. $P(k = 1) =$ `r psn(1, 2)`
+1. $P(k = 2) =$ `r psn(2, 2)`
+1. $P(k = 3) =$ `r psn(3, 2)`
+1. $P(k = 4) =$ `r psn(4, 2)`
+1. $P(k \leqslant 4) =$ `r psn(0, 2)+psn(1, 2)+psn(2, 2)+psn(3, 2)+psn(4, 2)` 
+
+### Continuous Distributions
+
+
+#### Uniform Distribution
+
+If a random variable has outcomes that are within a closed interval and if for any small interval within that interval probability is similar regardless of where that small interval is located, then that random variable is uniformly distributed.
+
+For instance, if an online course is scheduled for two days only but has start time every 2 hours (120 minutes), then a random variable of time spent by a prospective student waiting to join is said to be uniformly distributed if any fixed interval within [0, 120] minutes is similar.
+
+We can therefore formulate a probability density function for such a case by figuring an equation which will ensure any time between 0 and 120 minutes fall between 0 and 1 (probability interval; properties 1 and 2 of probability density function). Anything else would have a probability of 0. From basic algebra, to make values between 0 and 120 fall between 0 and 1 means dividing 120 by 1. With that we can have this probability density function:
+
+$$j(x) = 
+   \begin{cases}
+      \frac{1}{120} & \text{ if }\space{} 0 \leqslant x \leqslant 120\\\\
+      0 & \text{otherwise}
+   \end{cases}$$
+
+With this we can compute probability of a few prospective students waiting to join every 30 minutes like probability of waiting between 0 and 30, 10 and 40 minute or 60 and 90 minute.
+
+$$P(0 \leqslant x \leqslant 30) = \int_{0}^{30} \frac{1}{120}\space{}dx = \frac{x}{120}|_{0}^{30} = \frac{30}{120} - \frac{0}{120} = 0.25 $$
+
+$$P(10 \leqslant X \leqslant 40) = \int_{10}^{40} \frac{1}{120}\space{}dx = \frac{x}{120}|_{10}^{30} = \frac{40}{120} - \frac{10}{120}=0.25 $$
+
+$$P(60 \leqslant X \leqslant 90) = \int_{60}^{90} \frac{1}{120}\space{}dx = \frac{x}{120}|_{60}^{90} = \frac{90}{120} - \frac{60}{120} = \frac{30}{120}=0.25 $$
+
+We can now note probability of waiting between 0 and 30 minutes for every 2 hours is similar.
+
+
+```{r}
+x <- 0:120
+j <- function(x) {
+   ifelse(x >= 0 & x <= 120, 1/200, 0)
+}
+
+plot(x, j(x), type = "l")
+rect(0, 0, 30, j(0), border = "chocolate2", col = "chocolate2")
+rect(10, 0, 40, j(10), border = "chocolate", col = "chocolate")
+rect(60, 0, 90, j(60), border = "chocolate4", col = "chocolate4")
+```
+
+
+Generally, for a continuous random variable with outcomes in an interval [a, b], uniform distribution function can be defined as:
+
+$$j(x) = 
+   \begin{cases}
+      \frac{1}{b-a} & \text{ if }\space{} a \leqslant x \leqslant b\\\\
+      0             & \text{otherwise}
+   \end{cases}$$
+
+
+<u>Exercise</u>
+
+From our earlier example of time spent waiting to join an online course, compute these probability for a 20 minute interval:
+
+1. Compute following probabilities:
+    a. $P(20 \leqslant X \leqslant 40)$
+    a. $P(80 \leqslant X \leqslant 100)$
+1. Are these probabilities similar to those of a 30 minutes interval, explain you answer.
+
+
+<u>Exercises</u>
+
+```{r}
+p2040  <- (40-20)/120
+p80100 <- (100-80)/120
+```
+
+1.
+    a. $P(20 \leqslant X \leqslant 60) \approx$ `r round(p2040, 2)`
+    b. $P(80 \leqslant X \leqslant 100) \approx$ `r round(p80100, 2)`
+2. No these probabilities are different, probabilities of a 20 minute interval is less than that of a 30 minutes interval
+
+
+#### Exponential Distributions
+
+Exponential random variables are continuous random variables and their probability density function is given by:
+
+$$j(x) = 
+   \begin{cases}
+      (1/\lambda)e^{-x\lambda} & \text{if}\space{} x \geqslant 0\\\\
+      0                        & \text{otherwise}
+   \end{cases}$$
+
+where $\lambda$ is a positive constant.
+
+Cumulative distribution for this random variable for $x \geqslant 0$ is given by:
+
+$$J(x) = \int_{-\infty}^{x} j(t)dt = \int_0^x \frac{1}{\lambda}e^{-t/\lambda}dt = -e^{-t/\lambda}|_0^x $$
+
+Mean for this distribution is where $J(m) = P(X \leqslant m) = \frac{1}{2}$ and through integration this is solved as $\mu = \lambda$. Standard deviation is also solved as $\sigma = \lambda$. Median $m = \lambda \text{ ln }2$.
+
+As an example, suppose we are told length of time between exposure and contracting a certain disease (incubation time) is exponentially distributed and averages to about 2 weeks.
+
+Let us determine probability that a person contracts disease in less than a week ($P(X \leqslant 1)$) and probability that a person contracts disease more than 4 weeks after exposure ($P(X \geqslant 4)$).
+
+To begin with, let us define $X$ and mean $\lambda$ for our exponential random random variable.
+
+$X = \text{incubation time in weeks}$
+
+$\mu = \lambda = 2 \text{ (weeks)}$
+
+Now we can define a probability density function for this variable.
+
+$$j(x) = 
+   \begin{cases}
+      \frac{1}{2}e^{-x/2} & \text{if} \quad{} x \geqslant 0\\\\
+      0  & \text{otherwise} 
+   \end{cases}$$
+
+With this function we can compute our probabilities.
+
+$$P(X \leqslant 1)= \int_{-\infty}^{1} \frac{1}{2}e^{-x/2}\quad{}dx $$
+
+Since we know $J(x) = 0$ for any $x < 0$ then we only need to integrate from 0 to 1.
+
+$$P(X \leqslant 1) = \int_0^1 \frac{1}{2}e^{-x/2}\quad{}dx = (1 - e^{-x/2})|_0^1 \approx 0.39 $$
+
+For our second probability
+
+$$P(X \geqslant 4) = \int_4^{\infty} \frac{1}{2}e^{-x/2} $$
+
+Since $\infty$ is indeterminable, then we reason this from cumulative distribution, that is, we know CDF totals to 1;
+
+$$P(X \geqslant 4) = \int_0^4 \frac{1}{2}e^{-x/2} + \int_4^{\infty} \frac{1}{2}e^{-x/2}\quad{} dx = 1 $$
+
+$$\therefore P(X \geqslant 4)= 1 - \int_0^4 \frac{1}{2}e^{-x/2}\quad{}dx $$
+
+From cumulative distribution we get
+
+$$P(X \geqslant 4) = 1 - (-e^{-x/2})|_0^4 = e^{-2} \approx 0.14$$
+
+
+
+#### Normal Distributions
+
+Normal distributions are among most often used distribution and we shall use it quite often in inferential statistics. 
+
+Probability density function for a normal random variable is given by:
+
+$$j(x) = \frac{1}{\sigma \sqrt{2 \pi}}e^{-(x-\mu)^2/(2\sigma^2)} $$
+
+where $\mu$ is any constant and $\sigma$ is any positive constant.
+
+Normal probability density function is referred to as $X \sim N(\mu, \sigma^2)$.
+
+This $\mu$ can be shown to be $E(X)$ of a normal probability density function while $\sigma$ can be shown to be it's standard deviation.
+
+Graph of a normal probability function is referred to as a normal curve. If $x$ are clustered around $\mu$, then curve would appear tall and narrow as $\sigma$ would be small. If values of $x$ are spread out, then curve would appear to be broader as standard deviation would be large.
+
+Graphs of normal probability distributions are symmetric about it's mean as mean and median are equal and area below and above mean are equal at 0.5.
+
+
+```{r}
+npdf <- function(x, mu = 0, sigma = 1) {
+   (1/(sigma*sqrt(2*pi)))*exp(-(x-mu)^2/(2*sigma^2))
+}
+x1 <- seq(5, 25, 0.001)
+x2 <- seq(15, 25, 0.001)
+y1 <- npdf(x1, 15, 3)
+y2 <- npdf(x2, 20)
+plot(c(4, 26), c(0, 0.4), type = "n", ann = FALSE)
+lines(x1, y1, col = "chocolate4")
+lines(x2, y2, col = "chocolate")
+segments(c(15, 20), 0, c(15, 20), c(max(y1), max(y2)), lty = 2)
+text(6, c(0.08, 0.05), labels = c("mu = 15", "sigma = 3"))
+text(24, c(0.34, 0.3), labels = c("mu = 20", "sigma = 1"))
+```
+
+If $\mu = 0$ and $sigma = 1$, then 
+
+$$j(x) = \frac{1}{\sqrt{2\pi}}e^{-x^2/2} $$
+
+and referred to as a **standard normal distribution**.
+
+
+```{r}
+x3 <- seq(-5, 5, 0.001)
+y3 <- npdf(x3)
+plot(x3, y3, type = "l", col = "chocolate", ann = FALSE, xaxt = "n", yaxt = "n")
+segments(0, 0, 0, npdf(0), lty = 2)
+axis(1, 0, expression(mu))
+text(0+0.5, par("usr")[3]-0.1, "0 sd = 1", xpd = TRUE)
+title("standard normal curve")
+```
+
+
+Unfortunately it is not possible to use antiderivatives to evaluate probabilities between intervals as we have done with other distributions, however, tables can be used to approximate these probabilities.
+
+These tables can be used for any $\mu$ and $\sigma$ values. 
+
+We shall be using this distribution in our inferential chapter therefore we hold application and additional discussion till then.
+
